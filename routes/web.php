@@ -94,6 +94,7 @@ Route::get('/giftcards-view', 'GiftController@redeem_view')->name('giftcards-vie
 Route::get('/giftcards-redeem-view', 'GiftController@history_view')->name('giftcards-redeem-view');
 Route::post('/giftcards-redeem', 'GiftController@redeem_store')->name('giftcards-redeem');
 Route::resource('/service-order-history', TransactionHistoryController::class);
+Route::post('/service-order-update', 'TransactionHistoryController@OrderUpdate')->name('service-order-update');
 Route::resource('/coupon', GiftCouponController::class);
 Route::resource('/medspa-gift', MedsapGiftController::class);
 Route::resource('/email-template', EmailTemplateController::class);

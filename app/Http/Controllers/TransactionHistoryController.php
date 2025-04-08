@@ -90,4 +90,18 @@ class TransactionHistoryController extends Controller
     {
         //
     }
+
+    public function OrderUpdate(Request $request)
+    {
+        $data = $request->all();
+        // dd($data['payment_status']);
+        $transaction = TransactionHistory::where('order_id',$data['order_id'])->first();
+        // dd($transaction);   
+        $transaction->payment_status = $data['payment_status'];
+        $transaction->comments = $data['comments'];
+        $transaction->status = $data['payment_status']=='paid' ? 1 : 0;
+        $transaction->transaction_status = $data['payment_status']=='paid' ? 'complete' : 'failed';
+        $transaction->save();
+        return redirect()->back()->with('success', 'Transaction updated successfully');
+    }
 }

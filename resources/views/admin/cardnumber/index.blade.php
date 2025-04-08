@@ -227,7 +227,7 @@
                             <select name="payment_status" class="form-control status_id" id="payment_status_">
                                 <option value="">Select Status</option>
                                 <option value="succeeded">Succeeded</option>
-                                <option value="processing">Processing</option>
+                                <option value="fail">Fail</option>
                             </select>
 
                             <label for="comments_" style="margin-right: 10px;">Comments</label>

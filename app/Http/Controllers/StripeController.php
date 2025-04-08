@@ -590,9 +590,9 @@ public function invoice()
                     $transaction->update([
                         'order_id' => $updatedOrderId,
                         'payment_session_id' => $paymentSessionId,
-                        'transaction_status' => 'complete',
-                        'payment_status' => 'paid',
-                        'status' => 1,
+                        'transaction_status' => $request->payment_status =='paid' ? 'complete':'pending',
+                        'payment_status' => $request->payment_status,
+                        'status' => $request->payment_status =='paid' ? 1:0,
                         'payment_intent' => $paymentIntent,
                     ]);
                 }

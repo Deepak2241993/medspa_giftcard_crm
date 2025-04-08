@@ -452,7 +452,7 @@
                                         <div class="row mt-4 mb-4">
                                             <div class="col-md-6">
                                                 <input class="form-control" type="email" name="receipt_email"
-                                                    placeholder="Enter email..." id="search_email" value="deepak@thetemz.com">
+                                                    placeholder="Enter email..." id="search_email" value="">
                                             </div>
 
                                             <div class="col-md-2">

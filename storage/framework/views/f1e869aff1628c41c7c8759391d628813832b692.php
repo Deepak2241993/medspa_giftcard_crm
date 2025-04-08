@@ -1,5 +1,4 @@
-@extends('layouts.admin_layout')
-@section('body')
+<?php $__env->startSection('body'); ?>
 
 <section class="content-header">
     <div class="container-fluid">
@@ -29,7 +28,7 @@
             
             
             <!--begin::Row-->
-            {{-- {{ $data->onEachSide(50)->links() }} --}}
+            
             <table id="datatable-buttons" class="table table-bordered table-striped">
                 <thead>
                     <tr>
@@ -52,64 +51,69 @@
                 </thead>
 
                 <tbody id="data-table-body">
-                    @foreach($data as $key => $value)
+                    <?php $__currentLoopData = $data; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <tr>
-                            <td>{{ $loop->iteration }}</td>
+                            <td><?php echo e($loop->iteration); ?></td>
                             <td>
                                
-                                {{ $value->order_id }}
+                                <?php echo e($value->order_id); ?>
+
                                
                             </td>
                             <td>
                              
-                                @if(!empty($value->payment_intent && $value->payment_status == 'paid'))
+                                <?php if(!empty($value->payment_intent && $value->payment_status == 'paid')): ?>
                                 <a  class="btn btn-block btn-outline-success"
-                                    href="{{ route('service-invoice', ['transaction_data' => $value->id]) }}">
+                                    href="<?php echo e(route('service-invoice', ['transaction_data' => $value->id])); ?>">
                                     Invoice
                                 </a>
-                                @elseif($value->payment_status == 'under_process')
+                                <?php elseif($value->payment_status == 'under_process'): ?>
                                 <a  class="btn btn-block btn-outline-primary"
-                                    href="{{ route('service-invoice', ['transaction_data' => $value->id]) }}">
+                                    href="<?php echo e(route('service-invoice', ['transaction_data' => $value->id])); ?>">
                                     Invoice
                                 </a>
-                                @else
+                                <?php else: ?>
                                 <span class="text-danger">No Payment</span>
-                                @endif
+                                <?php endif; ?>
                             </td>
-                            <td>{{ $value->fname . " " . $value->lname }}</td>
-                            <td>{{ $value->email }}</td>
-                            <td>{{ $value->phone }}</td>
-                            <td>{{ $value->city }}</td>
-                            <td>{{ $value->country }}</td>
-                            <td>{{ $value->payment_intent }}</td>
-                            <td>${{ number_format($value->final_amount, 2) }}</td>
-                            <td>${{ number_format($value->transaction_amount, 2) }}</td>
-                            <td>{{ $value->gift_card_applyed ? 'Yes' : 'No' }}
+                            <td><?php echo e($value->fname . " " . $value->lname); ?></td>
+                            <td><?php echo e($value->email); ?></td>
+                            <td><?php echo e($value->phone); ?></td>
+                            <td><?php echo e($value->city); ?></td>
+                            <td><?php echo e($value->country); ?></td>
+                            <td><?php echo e($value->payment_intent); ?></td>
+                            <td>$<?php echo e(number_format($value->final_amount, 2)); ?></td>
+                            <td>$<?php echo e(number_format($value->transaction_amount, 2)); ?></td>
+                            <td><?php echo e($value->gift_card_applyed ? 'Yes' : 'No'); ?>
+
                             </td>
                             <td>
                                 <span
-                                    class="badge bg-{{ $value->payment_status == 'paid' ? 'success' : 'danger' }}">
-                                    {{ucfirst($value->payment_status) }}
+                                    class="badge bg-<?php echo e($value->payment_status == 'paid' ? 'success' : 'danger'); ?>">
+                                    <?php echo e(ucfirst($value->payment_status)); ?>
+
                                 </span>
-                                @if($value->payment_status == 'under_process')
+                                <?php if($value->payment_status == 'under_process'): ?>
                                 <a href="#">
                                     <span class="badge bg-warning" data-bs-toggle="modal"
-                                        data-bs-target="#paymentUpdate_{{ $value['id'] }}"
-                                        onclick="modalopen({{ $value['id'] }}, '{{ $value['order_id'] }}')">Update
+                                        data-bs-target="#paymentUpdate_<?php echo e($value['id']); ?>"
+                                        onclick="modalopen(<?php echo e($value['id']); ?>, '<?php echo e($value['order_id']); ?>')">Update
                                         Status</span>
                                 </a>
-                                @endif
+                                <?php endif; ?>
                             </td>
                             <td>
                                 <span
-                                    class="badge bg-{{ $value->transaction_status == 'complete' ? 'success' : 'danger' }}">
-                                    {{ucfirst($value->transaction_status) }}
+                                    class="badge bg-<?php echo e($value->transaction_status == 'complete' ? 'success' : 'danger'); ?>">
+                                    <?php echo e(ucfirst($value->transaction_status)); ?>
+
                                 </span>
                             </td>
-                            <td>{{ date('m-d-Y h:i:s', strtotime($value->updated_at)) }}
+                            <td><?php echo e(date('m-d-Y h:i:s', strtotime($value->updated_at))); ?>
+
                             </td>
                         </tr>
-                    @endforeach
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </tbody>
             </table>
 
@@ -143,7 +147,7 @@
     </div>
 </div>
 
-{{-- for payment status update modal --}}
+
 <div class="modal fade paymentUpdate" id="paymentUpdate_" data-bs-backdrop="static" data-bs-keyboard="false"
 tabindex="-1" aria-labelledby="paymentstatus" aria-hidden="true">
 <div class="modal-dialog">
@@ -155,8 +159,8 @@ tabindex="-1" aria-labelledby="paymentstatus" aria-hidden="true">
       </button>
         </div>
         <div class="modal-body">
-            <form method="post" action="{{route('service-order-update')}}">
-                @csrf
+            <form method="post" action="<?php echo e(route('service-order-update')); ?>">
+                <?php echo csrf_field(); ?>
                 <div style="display: flex; flex-direction: column;">
                     <label for="transaction_id_" style="margin-right: 10px;">Transaction id:</label>
                     <input class="transaction_id form-control" type="text" id="transaction_id_" name="order_id"
@@ -173,7 +177,7 @@ tabindex="-1" aria-labelledby="paymentstatus" aria-hidden="true">
                     <textarea class="form-control comments_" name="comments" id="comments_" style="margin-right: 20px;"></textarea>
 
                     <input type="hidden" class="user_token" name="user_token"
-                        value="{{ Auth::user()->user_token }}">
+                        value="<?php echo e(Auth::user()->user_token); ?>">
                     <input type="hidden" class="gift_id" id="gift_id_" name="id" value="">
 
                     <button type="submit"  class="btn btn-block btn-outline-primary mt-3 paymentstatusbutton" id="paymentstatusbutton"
@@ -189,9 +193,9 @@ tabindex="-1" aria-labelledby="paymentstatus" aria-hidden="true">
     </div>
 </div>
 </div>
-{{-- Paymnet status update modal End --}}
-@endsection
-@push('script')
+
+<?php $__env->stopSection(); ?>
+<?php $__env->startPush('script'); ?>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"
         integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -212,15 +216,15 @@ tabindex="-1" aria-labelledby="paymentstatus" aria-hidden="true">
             $('#staticBackdrop_' + id).modal('show');
 
             $.ajax({
-                url: '{{ route('order-search') }}',
+                url: '<?php echo e(route('order-search')); ?>',
                 method: "post",
                 dataType: "json",
                 data: {
-                    _token: '{{ csrf_token() }}',
+                    _token: '<?php echo e(csrf_token()); ?>',
                     order_id: order_id,
                     email: "",
                     phone: "",
-                    user_token: '{{ Auth::user()->user_token }}',
+                    user_token: '<?php echo e(Auth::user()->user_token); ?>',
                 },
                 success: function (response) {
                     if (response.success) {
@@ -275,7 +279,7 @@ tabindex="-1" aria-labelledby="paymentstatus" aria-hidden="true">
 
     </script>
 
-    {{--  Table --}}
+    
     <script>
         $(function () {
           $("#datatable-buttons").DataTable({
@@ -293,4 +297,6 @@ tabindex="-1" aria-labelledby="paymentstatus" aria-hidden="true">
           });
         });
       </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('layouts.admin_layout', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\medspa_giftcard_crm\resources\views/gift/order_history.blade.php ENDPATH**/ ?>
