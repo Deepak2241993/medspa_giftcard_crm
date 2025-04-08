@@ -577,7 +577,7 @@
                                                         <li class="d-flex justify-content-between py-3 border-top">
                                                             <strong>Payment Status</strong>
                                                             <select name="payment_status" class="form-control" id="payment_status">
-                                                                <option value="success" selected>Success</option>
+                                                                <option value="paid" selected>Success</option>
                                                                 <option value="under_process">Process</option>
                                                                 <option value="fail">Fail</option>
                                                             </select>
