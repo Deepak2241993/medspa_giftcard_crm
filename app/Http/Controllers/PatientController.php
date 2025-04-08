@@ -332,51 +332,54 @@ class PatientController extends Controller
 
     //  For Collect Patient Data
     // PatientData method in your controller
-public function PatientData(Request $request)
-{
-    // Find patient by email
-    $patientData = Patient::where('email', $request->email_id)->first();
-    // dd($patientData);
-    if (!$patientData) {
-        return response()->json([
-            'status' => 'error',
-            'message' => 'Patient not found.',
-        ], 404);
-    }
-
-    // Retrieve user giftcard Transaction Id for user
-    $mygiftcards = Giftsend::where(function($query) use ($patientData) {
-            $query->whereColumn('gift_send_to', 'receipt_email')
-                  ->whereNull('recipient_name')
-                  ->where('gift_send_to', $patientData->patient_login_id);
-        })
-        ->orWhere(function($query) use ($patientData) {
-            $query->whereColumn('gift_send_to', '!=', 'receipt_email')
-                  ->whereNotNull('recipient_name')
-                  ->where('gift_send_to', $patientData->patient_login_id);
-        })
-        ->orderBy('id', 'DESC')
-        ->get();
+    public function PatientData(Request $request)
+    {
+        // Search patient by email OR phone (partial match)
+        $patientData = Patient::where(function ($query) use ($request) {
+            $query->where('email', 'like', '%' . $request->search . '%')
+                  ->orWhere('phone', 'like', '%' . $request->search . '%');
+        })->first();
+    
+        // If no patient found
+        if (!$patientData) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Patient not found.',
+            ], 404);
+        }
+    
+        // Get giftcards related to the patient
+        $mygiftcards = Giftsend::where(function($query) use ($patientData) {
+                $query->whereColumn('gift_send_to', 'receipt_email')
+                      ->whereNull('recipient_name')
+                      ->where('gift_send_to', $patientData->patient_login_id);
+            })
+            ->orWhere(function($query) use ($patientData) {
+                $query->whereColumn('gift_send_to', '!=', 'receipt_email')
+                      ->whereNotNull('recipient_name')
+                      ->where('gift_send_to', $patientData->patient_login_id);
+            })
+            ->orderBy('id', 'DESC')
+            ->get();
+    
         $formattedGiftcards = [];
-
+    
         foreach ($mygiftcards as $value) {
-            // Get all gift card numbers for this transaction
-            $giftcards = GiftcardsNumbers::where('transaction_id', $value->transaction_id)->pluck('giftnumber')->toArray();
-        
+            $giftcards = GiftcardsNumbers::where('transaction_id', $value->transaction_id)
+                ->pluck('giftnumber')->toArray();
+    
             if (!empty($giftcards)) {
-                // Get unique final results based on gift card numbers
                 $final_results = GiftcardsNumbers::select(
-                    'giftnumber as card_number',
-                    DB::raw('SUM(actual_paid_amount) as total_paid_amount'),
-                    DB::raw('SUM(amount) as total_value_amount')
-                )
-                ->whereIn('giftnumber', $giftcards) 
-                ->where('user_token', 'FOREVER-MEDSPA')
-                ->where('status', 1)
-                ->groupBy('giftnumber')
-                ->get();
-        
-                // Store unique gift cards
+                        'giftnumber as card_number',
+                        DB::raw('SUM(actual_paid_amount) as total_paid_amount'),
+                        DB::raw('SUM(amount) as total_value_amount')
+                    )
+                    ->whereIn('giftnumber', $giftcards)
+                    ->where('user_token', 'FOREVER-MEDSPA')
+                    ->where('status', 1)
+                    ->groupBy('giftnumber')
+                    ->get();
+    
                 foreach ($final_results as $result) {
                     $formattedGiftcards[$result->card_number] = [
                         'card_number' => $result->card_number,
@@ -386,25 +389,25 @@ public function PatientData(Request $request)
                 }
             }
         }
-        
-        // Convert associative array to indexed array
+    
+        // Convert associative to indexed array
         $formattedGiftcards = array_values($formattedGiftcards);
-        
-        // dd($patientData);
-    // Prepare JSON response
-    return response()->json([
-        'status' => 'success',
-        'message' => 'Patient data and gift cards retrieved successfully.',
-        'patient_data' => [
-            'fname' => $patientData->fname,
-            'lname' => $patientData->lname,
-            'email' => $patientData->email,
-            'phone' => $patientData->phone,
-            'id' => $patientData->id,
-        ],
-        'giftcards' => $formattedGiftcards,
-    ]);
-}
+    
+        // Return JSON response
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Patient data and gift cards retrieved successfully.',
+            'patient_data' => [
+                'fname' => $patientData->fname,
+                'lname' => $patientData->lname,
+                'email' => $patientData->email,
+                'phone' => $patientData->phone,
+                'id' => $patientData->id,
+            ],
+            'giftcards' => $formattedGiftcards,
+        ]);
+    }
+    
 
     
 

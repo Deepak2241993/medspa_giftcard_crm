@@ -455,8 +455,8 @@
                                         <h5>Search Patient by Email</h5>
                                         <div class="row mt-4 mb-4">
                                             <div class="col-md-6">
-                                                <input class="form-control" type="email" name="receipt_email"
-                                                    placeholder="Enter email..." id="search_email" value="">
+                                                <input class="form-control" type="email" name="search"
+                                                    placeholder="Search By Email/Phone" id="search_email" value="">
                                             </div>
 
                                             <div class="col-md-2">
@@ -674,7 +674,7 @@
         dataType: "json",
         data: {
             _token: '{{ csrf_token() }}',
-            email_id: $('#search_email').val() // Get email input value
+            search: $('#search_email').val() // Get email input value
         },
         success: function(response) {
             if (response.status === 'success') {
