@@ -340,14 +340,13 @@ class PatientController extends Controller
                   ->orWhere('phone', 'like', '%' . $request->search . '%');
         })->first();
     
-        // If no patient found
+    // If no patient found
         if (!$patientData) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Patient not found.',
-            ], 404);
+                'message' => 'Data not found. Try with Email/ Number',
+            ],); // Use 404 or any other status code appropriate
         }
-    
         // Get giftcards related to the patient
         $mygiftcards = Giftsend::where(function($query) use ($patientData) {
                 $query->whereColumn('gift_send_to', 'receipt_email')
