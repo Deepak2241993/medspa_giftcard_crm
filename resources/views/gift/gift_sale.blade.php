@@ -743,7 +743,7 @@
 
                                         <button type="button" class="previous btn btn-dark action-button-previous">Go
                                             Back</button>
-                                        <input type="submit" name="cok" value="Submit"  class="btn btn-block btn-outline-success" style="width: 50%;
+                                        <input type="submit" name="cok" value="Submit"  class="btn btn-success" style="width: 50%;
                                     font-weight: bold;
                                     color: white;
                                     border: 0 none;

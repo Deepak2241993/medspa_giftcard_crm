@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Giftsend;
+use App\Models\TimelineEvent;
 use App\Models\Patient;
 use App\Mail\PatientEmailVerify;
 use App\Mail\ForgotPasswordMail;
@@ -15,7 +16,7 @@ use Session;
 use Validator;
 use Hash;
 use Str;
-use App\Events\GiftcardsBuyFromCenter;
+use App\Events\EventLogin;
 use App\Events\EventPatientLogout;
 use App\Events\EventPatientCreated;
 use Illuminate\Support\Facades\DB;
@@ -86,6 +87,12 @@ class AdminController extends Controller
     $credentials = $request->only('patient_login_id', 'password');
     $remember = $request->filled('remember'); 
 
+    // Befor Login Update Data of Patient Timeline of giftcard from center purchase  and giftcard table
+    $patient = Patient::where('patient_login_id', $request->patient_login_id)->first();
+    Giftsend::where('gift_send_to', $patient->email)->update(['gift_send_to' => $patient->patient_login_id]);
+    Giftsend::where('receipt_email', $patient->email)->update(['receipt_email' => $patient->patient_login_id]);
+    TimelineEvent::where('patient_id', $patient->email)->update(['patient_id' => $patient->patient_login_id]);
+
     // Attempt login
     if (Auth::guard('patient')->attempt($credentials)) {
         $patient = Auth::guard('patient')->user();
@@ -115,7 +122,7 @@ class AdminController extends Controller
 
         // Event Hit for Giftcard table update
         
-        event(new GiftcardsBuyFromCenter($patient));
+        event(new EventLogin($patient));
 
         // Check for amount in session and redirect accordingly
         if (Session::has('amount')) {

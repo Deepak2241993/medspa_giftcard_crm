@@ -862,11 +862,6 @@ public function gift_purchase(Request $request, Giftsend $giftsend, GiftCoupon $
     
     $result = $giftsend->create($data);
 
-    // Update Transaction ID
-    if ($result) {
-        $result->update(['transaction_id' => $data['transaction_id'] . $result->id]);
-    }
-
     // Check payment status and proceed
     if ($result && $result->payment_status == 'succeeded') {
         $qty = $result->qty;
@@ -916,8 +911,14 @@ public function gift_purchase(Request $request, Giftsend $giftsend, GiftCoupon $
                 }
                
             }
-
+        // Below Line is for send gift card to patient email Data Search by Patient_login_id
             $patient_data = Patient::where('patient_login_id',$gift_send_to)->first();
+            
+            // if($patient_data )
+            // {
+                
+            // }
+
             if($patient_data)
             {
                 Mail::to($patient_data->email)->send(new GeftcardMail($result));
@@ -942,7 +943,7 @@ public function gift_purchase(Request $request, Giftsend $giftsend, GiftCoupon $
             'result' => $result,
             'error' => 'Something Went Wrong',
             'status' => 404
-        ]);
+        ],404);
     }
 }
 

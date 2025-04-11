@@ -38,7 +38,6 @@ class ListenerGiftcardPurchases
             //  For Purchase Self
             if($transaction_result['gift_send_to'] ==  $patient_login_id)
             {
-                 $patient = Patient::where('patient_login_id',$patient_login_id)->first();
                     if ($transaction_result) {
                         $giftcards = GiftcardsNumbers::select('giftnumber')
                             ->where('transaction_id', $transaction_result->transaction_id)
@@ -55,8 +54,8 @@ class ListenerGiftcardPurchases
                     TimelineEvent::create([
                         'patient_id' => $transaction_result['gift_send_to'], 
                         'event_type' => 'Giftcard Purchase',
-                        'subject' => 'Giftcards Transaction',
-                        'metadata' => "Giftcard purchased for ".$patient->fname." ".$patient->lname
+                        'subject' => 'Giftcards Transaction-'.$transaction_result->transaction_id,
+                        'metadata' => "Giftcard purchased for Self<br>Giftcards:".$giftcardnumber
 
                     ]);
                     Log::info('Timeline event stored', ['transaction_id' => $event->transaction_entry['transaction_id']]);
@@ -81,21 +80,39 @@ class ListenerGiftcardPurchases
                     
                 try {
                     //  Message Show for Sender 
-                    $patient = Patient::where('patient_login_id',$transaction_result['gift_send_to'])->first();
+                    $sender_patient = Patient::where('patient_login_id',$transaction_result['gift_send_to'])->first();
+                    // First Details Get By UserName
+                    if($sender_patient){
+                        $patient_name = $sender_patient->fname." ".$sender_patient->lname;
+                    }
+                    // If No Found User Name Then Get By Email
+                    else{
+                        $sender_patient = Patient::where('email',$transaction_result['gift_send_to'])->first();
+                        $patient_name = $sender_patient->fname." ".$sender_patient->lname;
+                    }
                     TimelineEvent::create([
                         'patient_id' => $transaction_result['receipt_email'], 
                         'event_type' => 'Giftcard Purchase',
-                        'subject' => 'Giftcards Transaction',
-                        'metadata' => "Giftcard Sent to ".$patient->fname." ".$patient->lname
+                        'subject' => 'Giftcards Transaction-'.$transaction_result->transaction_id,
+                        'metadata' => "Giftcard Sent to ".$patient_name."<br> Giftcards:".$giftcardnumber
 
                     ]);
                     //  Message Show for Receiver
-                    $patient = Patient::where('patient_login_id',$transaction_result['receipt_email'])->first();
+                    $receiver_patient = Patient::where('patient_login_id',$transaction_result['receipt_email'])->first();
+                    if($receiver_patient){
+                        $patient_name = $receiver_patient->fname." ".$receiver_patient->lname;
+                    }
+                    // If No Found User Name Then Get By Email
+                    else{
+                        $receiver_patient = Patient::where('email',$transaction_result['receipt_email'])->first();
+                        $patient_name = $receiver_patient->fname." ".$receiver_patient->lname;
+                    }
+
                     TimelineEvent::create([
                         'patient_id' => $transaction_result['gift_send_to'], 
                         'event_type' => 'Giftcard Purchase',
                         'subject' => 'Giftcards Transaction',
-                        'metadata' => "Giftcard sent by ".$patient->fname." ".$patient->lname."<br> Giftcards:".$giftcardnumber
+                        'metadata' => "Giftcard sent by ".$patient_name."<br> Giftcards:".$giftcardnumber
 
                     ]);
 

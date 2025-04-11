@@ -15,6 +15,7 @@ use App\Mail\GiftCardStatement;
 use App\Mail\GiftcardCancelMail;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Log;
+use App\Events\GiftcardsBuyFromCenter;
 class GiftsendController extends Controller
 {
     /**
@@ -360,45 +361,50 @@ else{
 
      // For Other Giftcards
 
-public function GiftPurchase(Request $request)
-{
-    // Define validation rules
-    $request->validate([
-        'your_name' => 'required|string|max:255',
-        'gift_send_to' => 'required|email|max:255',
-    ], [
-        'your_name.required' => 'The Your Name field is required.',
-        'gift_send_to.required' => 'The email field is required.',
-        'gift_send_to.email' => 'The email must be a valid email address.',
-    ]);
-
-    // If validation passes, proceed with the rest of the logic
-    $data_arr = $request->except('_token');
-    $transaction_id = 'FEMS-' . time();
-    $data_arr['transaction_id'] = $transaction_id;
-    $data_arr['payment_mode'] = 'From Forever Medspa Center';
-
-    // Encode data as JSON for the API call
-    $data = json_encode($data_arr);
-    // dd($data);
-
-    // Call the API and handle response
-    try {
-        $resultData = $this->postAPI('gift-purchase-from-store', $data);
-
-        if (isset($resultData['result'])) {
-            $result = (object) $resultData['result'];
-            return redirect()->route('giftcard-purchases-success')->with('transaction_details', $result);
-        } else {
-            // Handle case where 'result' is not set in the API response
-            return redirect()->back()->withErrors('Unexpected API response. Please try again.');
-        }
-    } catch (\Exception $e) {
-        // Log the exception and handle the error gracefully
-        \Log::error('API call failed: ' . $e->getMessage());
-        return redirect()->back()->withErrors('There was an error processing your request. Please try again later.');
-    }
-}
+     public function GiftPurchase(Request $request)
+     {
+         // Validate incoming request
+         $validated = $request->validate([
+             'your_name' => 'required|string|max:255',
+             'gift_send_to' => 'required|email|max:255',
+         ], [
+             'your_name.required' => 'The Your Name field is required.',
+             'gift_send_to.required' => 'The Email field is required.',
+             'gift_send_to.email' => 'The Email must be a valid email address.',
+         ]);
+     
+         // Prepare the data for API
+         $data_arr = $request->except('_token');
+         $data_arr['transaction_id'] = 'FEMS-' . time();
+         $data_arr['payment_mode'] = 'From Forever Medspa Center';
+     
+         // Convert data to JSON for API
+         $data = json_encode($data_arr);
+     
+         try {
+             // Call the API
+             $resultData = $this->postAPI('gift-purchase-from-store', $data);
+     
+             if (isset($resultData['result'])) {
+                 $result = (object) $resultData['result'];
+     
+                 // Fire event
+                 event(new GiftcardsBuyFromCenter(['data' => $result]));
+     
+                 // Redirect with transaction details
+                 return redirect()->route('giftcard-purchases-success')
+                     ->with('transaction_details', $result);
+             } else {
+                 return redirect()->back()
+                     ->withErrors('Unexpected API response. Please try again.');
+             }
+         } catch (\Exception $e) {
+             \Log::error('GiftPurchase API call failed: ' . $e->getMessage());
+             return redirect()->back()
+                 ->withErrors('There was an error processing your request. Please try again later.');
+         }
+     }
+     
 
 
 

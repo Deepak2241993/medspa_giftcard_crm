@@ -201,26 +201,32 @@ class PatientController extends Controller
             return redirect()->route('patient-login')->withErrors(['patient_login_id' => 'Please log in first.']);
         }
         // PAtient Profile
-        public function PatientProfile(Patient $patient,Request $request)
+        public function PatientProfile(Patient $patient, Request $request)
         {
             $id = Auth::guard('patient')->user()->id;
+        
+            // Get the logged-in patient
             $patient = Patient::find($id);
-            // dd($patient->patient_login_id);
-            $query = TimelineEvent::query();
-
-        // Apply filter if start_time and end_time are provided
-        if ($request->start_time && $request->end_time) {
-            $startTime = Carbon::parse($request->start_time)->startOfDay();
-            $endTime = Carbon::parse($request->end_time)->endOfDay();
-            $query->whereBetween('created_at', [$startTime, $endTime]);
-        } else {
-            // Show latest 10 entries by default
-            $query->latest()->limit(10);
+        
+            // Start building the timeline query filtered by patient ID
+            $query = TimelineEvent::where('patient_id', $patient->patient_login_id);
+        
+            // Apply date range filter if provided
+            if ($request->start_time && $request->end_time) {
+                $startTime = Carbon::parse($request->start_time)->startOfDay();
+                $endTime = Carbon::parse($request->end_time)->endOfDay();
+                $query->whereBetween('created_at', [$startTime, $endTime]);
+            } else {
+                // Show latest 10 entries by default
+                $query->latest()->limit(10);
+            }
+        
+            // Execute the query
+            $timeline = $query->get();
+        
+            return view('patient.patient_profile.profile', compact('patient', 'timeline'));
         }
-    
-        $timeline = $query->get();
-            return view('patient.patient_profile.profile',compact('patient','timeline'));
-        }
+        
 
         //  For purchased Gift cards Show
          public function Mygiftcards(Patient $patient)
