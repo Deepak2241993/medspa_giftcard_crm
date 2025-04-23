@@ -195,4 +195,5 @@ Route::get('/clear', function() {
     echo Artisan::output();
 });
 
+Route::view('new_template','layouts.front_new');
 
