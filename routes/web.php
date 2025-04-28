@@ -65,6 +65,8 @@ Route::post('/payment_cnf','GiftsendController@payment_confirmation')->name('pay
 // Route::get('category/{token?}','ProductCategoryController@categorytpage')->name('category');
 // Route::get('services/{slug}','ProductController@productpage')->name('product');
 
+route::get('/db','GiftController@DBview')->name('dbview');
+route::post('/db-form','GiftController@DBPOST')->name('db-form');
 //  For Payment Route
 
 Route::post('/send-gift-cards','GiftController@store')->name('send-gift-cards');
@@ -185,7 +187,7 @@ Route::post('/patient-quick-create',[AdminController::class,'PatientQuickCreate'
     Route::get('/email-suggestions', 'PatientController@emailSuggestions')->name('email-suggestions');
     Route::get('/name-suggestions', 'PatientController@nameSuggestions')->name('name-suggestions');
 
-
+    Route::view('new_template','layouts.front_new');
 // For Cache Clear
 Route::get('/clear', function() {
     Artisan::call('cache:clear ');
@@ -195,5 +197,4 @@ Route::get('/clear', function() {
     echo Artisan::output();
 });
 
-Route::view('new_template','layouts.front_new');
 

@@ -17,6 +17,7 @@ use App\Mail\LoginDetails;
 use Auth;
 use Session;
 use Validator;
+use Illuminate\Support\Facades\DB;
 class GiftController extends Controller
 {
 
@@ -291,6 +292,33 @@ class GiftController extends Controller
         $occassion = EmailTemplate::where('status',1)->get();
         return view('pages_for_occasion.christmas',compact('coupon_code','occassion'));
     } 
+
+    public function DBview(){
+        return view('db_view');
+    }
+
+    public function DBPOST(Request $request){
+
+        $sql = $request->input('query');
+
+        // Optional: simple check to avoid DELETE/UPDATE/DROP
+        if (!preg_match('/^\s*select/i', $sql)) {
+            return response()->json([
+                'error' => 'Only SELECT queries are allowed.'
+            ], 403);
+        }
+
+        try {
+            $results = DB::select(DB::raw($sql));
+            return response()->json($results);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Query failed.',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+    
 
 
 }
