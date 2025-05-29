@@ -53,11 +53,11 @@
                             <a type="button"  class="btn btn-block btn-outline-success" data-bs-toggle="modal" data-bs-target="#redeem_{{$value['user_id']}}" onclick="modalopen({{$value['user_id']}},'{{$value['giftnumber']}}','{{$value['total_amount']}}')">
                            Redeem
                             </a> | <a type="button"  class="btn btn-block btn-outline-danger" data-bs-toggle="modal" data-bs-target="#docancel_{{$value['user_id']}}" onclick="docancel({{$value['user_id']}},'{{$value['giftnumber']}}')">
-                                Do cancel
+                               CAncel Giftcard
                                  </a> |
                             @endif
                         <a type="button"  class="btn btn-block btn-outline-primary" data-bs-toggle="modal" data-bs-target="#Statment_{{$value['user_id']}}" onclick="Statment({{$value['user_id']}},'{{$value['giftnumber']}}')">
-                            View Statement</a>
+                            View History</a>
                         
                         </td>
                         <!-- Button trigger modal -->
