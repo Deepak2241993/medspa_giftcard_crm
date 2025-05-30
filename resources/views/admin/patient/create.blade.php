@@ -12,6 +12,7 @@
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#">Home</a></li>
                         <li class="breadcrumb-item active">Patient Profile</li>
+
                     </ol>
                 </div>
                 @if (session()->has('error'))
@@ -92,30 +93,49 @@
                     <div class="card">
                         <div class="card-header p-2">
                             <ul class="nav nav-pills">
-                                <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Activity
-                                        Timeline</a></li>
-                                <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Profile
-                                        Settings</a></li>
+                                <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Activity Timeline</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">ProfileSettings</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#giftcards" data-toggle="tab">Giftcards Orders</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#services" data-toggle="tab">Services Orders</a></li>
                             </ul>
                         </div><!-- /.card-header -->
                         <div class="card-body">
                             <div class="tab-content">
 
                                 <div class="active tab-pane" id="activity">
+                                    <h4 class="mb-4">Time Line</h4>
+                                    {{-- For Search --}}
+                                    <div class="mb-3">
+                                        <form method="GET" action="">
+                                            <div class="row align-items-end g-2">
+                                                <div class="col-auto">
+                                                    <label for="start_time" class="form-label">Start Time:</label>
+                                                    <input type="date" id="start_time" name="start_time"
+                                                        value="{{ request('start_time') }}"
+                                                        class="form-control form-control-sm">
+                                                </div>
 
-                                  {{-- For Search --}}
-                                    <div class="d-flex justify-content-end mb-3">
-                                      <form method="GET" action="" class="d-flex align-items-center">
-                                        <label for="start_time" class="me-2">Start Time:</label>
-                                        <input type="date" id="start_time" name="start_time" value="{{ request('start_time') }}" class="form-control me-2">
-                                        
-                                        <label for="end_time" class="me-2">End Time:</label>
-                                        <input type="date" id="end_time" name="end_time" value="{{ request('end_time') }}" class="form-control me-2">
+                                                <div class="col-auto">
+                                                    <label for="end_time" class="form-label">End Time:</label>
+                                                    <input type="date" id="end_time" name="end_time"
+                                                        value="{{ request('end_time') }}"
+                                                        class="form-control form-control-sm">
+                                                </div>
 
-                                        <button type="submit" class="btn btn-primary me-2">Filter</button> |
-                                        <a href="{{ url()->current() }}" class="btn btn-secondary">Reset</a>
-                                      </form>
+                                                <div class="col-auto">
+                                                    <label class="form-label invisible">Filter</label>
+                                                    <button type="submit" class="btn btn-sm btn-primary w-100">Filter</button>
+                                                </div>
+
+                                                <div class="col-auto">
+                                                    <label class="form-label invisible">Reset</label>
+                                                    <a href="{{ url()->current() }}" class="btn btn-sm btn-secondary w-100">Reset</a>
+                                                </div>
+                                            </div>
+                                        </form>
                                     </div>
+
+
 
                                     {{-- Search Line Time --}}
                                     <!-- Post -->
@@ -202,11 +222,9 @@
                                     <!-- /.post -->
                                 </div>
 
-
-
-
+                                {{-- For Settings --}}
                                 <div class="tab-pane" id="settings">
-
+                                    <h4 class="mb-4">Profile Settings</h4>
                                     <form class="form-horizontal" method="post"
                                         action="{{ route('patient.update', $patient->id) }}" novalidate="novalidate"
                                         enctype="multipart/form-data">
@@ -239,32 +257,32 @@
                                                     class="text-danger">*</span></label>
                                             <div class="col-sm-10">
                                                 <input type="text" class="form-control" id="phone"
-                                                    placeholder="Phone" value="{{ $patient->phone }}" required>
+                                                    placeholder="Phone" name="phone" value="{{ $patient->phone }}" required>
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label for="inputExperience" class="col-sm-2 col-form-label">Address</label>
                                             <div class="col-sm-10">
-                                                <textarea class="form-control" id="inputExperience" placeholder="Experience">{{ $patient->address }}</textarea>
+                                                <textarea class="form-control" name="address" id="inputExperience" placeholder="Experience">{{ $patient->address }}</textarea>
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label for="City" class="col-sm-2 col-form-label">City</label>
                                             <div class="col-sm-4">
                                                 <input type="text" class="form-control" id="City"
-                                                    placeholder="City" value="{{ $patient->city }}">
+                                                    placeholder="City" name="city" value="{{ $patient->city }}">
                                             </div>
                                             <label for="Country" class="col-sm-2 col-form-label">Country</label>
                                             <div class="col-sm-4">
                                                 <input type="text" class="form-control" id="country"
-                                                    placeholder="Country" value="{{ $patient->country }}">
+                                                    placeholder="Country" name="country" value="{{ $patient->country }}">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label for="State" class="col-sm-2 col-form-label">Zip Code</label>
                                             <div class="col-sm-4">
                                                 <input type="text" class="form-control" id="State"
-                                                    placeholder="Zip Code" value="{{ $patient->zip_code }}">
+                                                    placeholder="Zip Code" name="zip_code" value="{{ $patient->zip_code }}">
                                             </div>
                                             <label for="Password" class="col-sm-2 col-form-label">Password</label>
                                             <div class="col-sm-4">
@@ -287,6 +305,340 @@
                                         </div>
                                     </form>
                                 </div>
+
+                                {{-- For Orders  --}}
+                                <div class="tab-pane" id="giftcards">
+                                    <h4>Giftcards Orders</h4>
+                                    <div class="col-12 col-sm-12">
+                                        <div class="card card-primary card-outline card-tabs">
+                                            <div class="card-header p-0 pt-1 border-bottom-0">
+                                                <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
+                                                    <li class="nav-item">
+                                                        <a class="nav-link active" id="custom-tabs-three-received-tab" data-toggle="pill"
+                                                            href="#custom-tabs-three-home" role="tab"
+                                                            aria-controls="custom-tabs-three-home" aria-selected="true">My
+                                                            Giftcard</a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                        <a class="nav-link" id="custom-tabs-three-send-tab" data-toggle="pill"
+                                                            href="#custom-tabs-three-profile" role="tab"
+                                                            aria-controls="custom-tabs-three-profile" aria-selected="false">Send</a>
+                                                    </li>
+
+                                                </ul>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="scroll-container">
+                                                    <div style="overflow: scroll">
+                                                        <div class="tab-content" id="custom-tabs-three-tabContent">
+                                                            <div class="tab-pane fade show active" id="custom-tabs-three-home"
+                                                                role="tabpanel" aria-labelledby="custom-tabs-three-received-tab">
+                                                                @if ($mygiftcards->count())
+                                                                    <table id="datatable-buttons"
+                                                                        class="table table-bordered table-striped">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>#</th>
+                                                                                <th>Giftcard Number</th>
+                                                                                <th>Giftcard History</th>
+                                                                                <th>Generated Date & Time</th>
+                                                                                <th>Sender Name</th>
+                                                                                <th>Message</th>
+                                                                                {{-- <th>Sender's Email</th> --}}
+                                                                                <th>Coupon Code</th>
+                                                                                <th>Qty</th>
+                                                                                <th>Giftcard Value</th>
+                                                                                <th>Discount</th>
+                                                                                <th>Paid Amount</th>
+                                                                                <th>Payment Status</th>
+                                                                                <th>Transaction Id</th>
+
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody id="data-table-body">
+                                                                            @foreach ($mygiftcards as $key => $value)
+                                                                                <tr>
+                                                                                    <td>{{ $loop->iteration }}</td>
+                                                                                    <td>
+                                                                                        <a type="button"
+                                                                                            class="btn btn-block btn-outline-primary"
+                                                                                            data-bs-toggle="modal"
+                                                                                            data-bs-target="#staticBackdrop_{{ $value['id'] }}"
+                                                                                            onclick="cardview({{ $value['id'] }},'{{ $value['transaction_id'] }}')">
+                                                                                            View
+                                                                                        </a>
+
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <a type="button"
+                                                                                            class="btn btn-block btn-outline-dark"
+                                                                                            href="{{ route('giftcards-statement', $value['id']) }}">
+                                                                                            History
+                                                                                        </a>
+
+                                                                                    </td>
+                                                                                    <td><?php echo date('m-d-Y h:i:A', strtotime($value['created_at'])); ?></td>
+                                                                                
+                                                                                    <td>
+                                                                                        @if ($value['gift_send_to'] == $value['receipt_email'])
+                                                                                        Self
+                                                                                        @elseif ($value['gift_send_to'] != $value['receipt_email'])
+                                                                                            {{$value['your_name']}}
+                                                                                        @else{
+                                                                                            {{!! "<span class='badge bg-primary'>".$value['your_name']."</span>" !!}}
+                                                                                        }
+                                                                                        @endif
+                                                                                    </td>
+                                                                                    <td>{{ $value['recipient_name'] ? $value['message'] : '---' }}
+                                                                                    </td>
+                                                                                    {{-- <td>{{ $value['recipient_name'] ? $value['receipt_email'] : 'Medspa' }}</td> --}}
+                                                                                    <td class="text-uppercase">
+                                                                                        {{ $value['coupon_code'] ? $value['coupon_code'] : '----' }}
+                                                                                    </td>
+                                                                                    <td>{{ $value['qty'] ? $value['qty'] : '----' }}</td>
+                                                                                    <td>{{ $value['amount'] ? '$' . $value['amount'] : '$ 0' }}
+                                                                                    </td>
+                                                                                    <td>{{ $value['discount'] ? '$' . $value['discount'] : '$ 0' }}
+                                                                                    </td>
+                                                                                    <td>{{ $value['transaction_amount'] ? '$' . $value['transaction_amount'] : '$ 0' }}
+                                                                                    </td>
+
+                                                                                    <td>
+                                                                                        @if ($value['payment_status'] == 'succeeded')
+                                                                                            <span
+                                                                                                class="badge bg-success">{{ ucFirst($value['payment_status']) }}</span>
+                                                                                        @elseif($value['payment_status'] == 'processing')
+                                                                                            <span
+                                                                                                class="badge bg-primary">{{ ucFirst($value['payment_status']) }}</span>
+                                                                                        @elseif($value['payment_status'] == 'amount_capturable_updated')
+                                                                                            <span
+                                                                                                class="badge bg-warning">{{ ucFirst($value['payment_status']) }}</span>
+                                                                                        @elseif($value['payment_status'] == 'payment_failed')
+                                                                                            <span
+                                                                                                class="badge bg-danger">{{ ucFirst($value['payment_status']) }}</span>
+                                                                                        @else
+                                                                                            <span class="badge bg-danger">Incompleted</span>
+                                                                                        @endif
+                                                                                    </td>
+                                                                                    <td>{{ $value['transaction_id'] }}</td>
+
+
+
+
+
+                                                                                    <!-- Button trigger modal -->
+                                                                                </tr>
+                                                                            @endforeach
+                                                                            <br>
+                                                                            {{ $mygiftcards->links() }}
+                                                                        </tbody>
+                                                                    </table>
+                                                                    {{ $mygiftcards->links() }}
+                                                                @else
+                                                                    <hr>
+                                                                    <p> No data found</p>
+                                                                @endif
+                                                            </div>
+                                                            {{-- All Giftcard Send  --}}
+                                                            <div class="tab-pane fade" id="custom-tabs-three-profile" role="tabpanel"
+                                                                aria-labelledby="custom-tabs-three-send-tab">
+                                                                @if ($sendgiftcards->count())
+                                                                <table id="datatable-buttons"
+                                                                    class="table table-bordered table-striped">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>#</th>
+                                                                            <th>Giftcard Number</th>
+                                                                            <th>Giftcard History</th>
+                                                                            <th>Generated Date & Time</th>
+                                                                            <th>Sent to</th>
+                                                                            <th>Message</th>
+                                                                            {{-- <th>Sender's Email</th> --}}
+                                                                            <th>Coupon Code</th>
+                                                                            <th>Qty</th>
+                                                                            <th>Giftcard Value</th>
+                                                                            <th>Discount</th>
+                                                                            <th>Paid Amount</th>
+                                                                            <th>Payment Status</th>
+                                                                            <th>Transaction Id</th>
+
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody id="data-table-body">
+                                                                        @foreach ($sendgiftcards as $key => $value)
+                                                                            <tr>
+                                                                                <td>{{ $loop->iteration }}</td>
+                                                                                <td>
+                                                                                    <a type="button"
+                                                                                        class="btn btn-block btn-outline-primary"
+                                                                                        data-bs-toggle="modal"
+                                                                                        data-bs-target="#staticBackdrop_{{ $value['id'] }}"
+                                                                                        onclick="cardview({{ $value['id'] }},'{{ $value['transaction_id'] }}')">
+                                                                                        View
+                                                                                    </a>
+
+                                                                                </td>
+                                                                                <td>
+                                                                                    <a type="button"
+                                                                                        class="btn btn-block btn-outline-dark"
+                                                                                        href="{{ route('giftcards-statement', $value['id']) }}">
+                                                                                        History
+                                                                                    </a>
+
+                                                                                </td>
+                                                                                <td><?php echo date('m-d-Y h:i:A', strtotime($value['created_at'])); ?></td>
+                                                                                </td>
+                                                                                <td>
+                                                                                    
+                                                                                        @if ($value['recipient_name'] != null && ($value['gift_send_to'] != $value['receipt_email']))
+                                                                                            {{$value['recipient_name']}}
+                                                                                        @else{
+                                                                                            {{!! "<span class='badge bg-primary'>".$value['your_name']."</span>" !!}}
+                                                                                        }
+                                                                                        @endif
+                                                                                </td>
+                                                                                <td>{{ $value['recipient_name'] ? $value['message'] : '---' }}
+                                                                                </td>
+                                                                                {{-- <td>{{ $value['recipient_name'] ? $value['receipt_email'] : 'Medspa' }}</td> --}}
+                                                                                <td class="text-uppercase">
+                                                                                    {{ $value['coupon_code'] ? $value['coupon_code'] : '----' }}
+                                                                                </td>
+                                                                                <td>{{ $value['qty'] ? $value['qty'] : '----' }}</td>
+                                                                                <td>{{ $value['amount'] ? '$' . $value['amount'] : '$ 0' }}
+                                                                                </td>
+                                                                                <td>{{ $value['discount'] ? '$' . $value['discount'] : '$ 0' }}
+                                                                                </td>
+                                                                                <td>{{ $value['transaction_amount'] ? '$' . $value['transaction_amount'] : '$ 0' }}
+                                                                                </td>
+
+                                                                                <td>
+                                                                                    @if ($value['payment_status'] == 'succeeded')
+                                                                                        <span
+                                                                                            class="badge bg-success">{{ ucFirst($value['payment_status']) }}</span>
+                                                                                    @elseif($value['payment_status'] == 'processing')
+                                                                                        <span
+                                                                                            class="badge bg-primary">{{ ucFirst($value['payment_status']) }}</span>
+                                                                                    @elseif($value['payment_status'] == 'amount_capturable_updated')
+                                                                                        <span
+                                                                                            class="badge bg-warning">{{ ucFirst($value['payment_status']) }}</span>
+                                                                                    @elseif($value['payment_status'] == 'payment_failed')
+                                                                                        <span
+                                                                                            class="badge bg-danger">{{ ucFirst($value['payment_status']) }}</span>
+                                                                                    @else
+                                                                                        <span class="badge bg-danger">Incompleted</span>
+                                                                                    @endif
+                                                                                </td>
+                                                                                <td>{{ $value['transaction_id'] }}</td>
+
+
+
+
+
+                                                                                <!-- Button trigger modal -->
+                                                                            </tr>
+                                                                        @endforeach
+                                                                        <br>
+                                                                        {{ $sendgiftcards->links() }}
+                                                                    </tbody>
+                                                                </table>
+                                                                {{ $sendgiftcards->links() }}
+                                                            @else
+                                                                <hr>
+                                                                <p> No data found</p>
+                                                            @endif
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- /.card -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                   {{-- For Services Orders  --}}
+                                <div class="tab-pane" id="services">
+                                    <h4>Services Orders</h4>
+                                    <div class="col-12 col-sm-12">
+                                        <div class="card card-primary card-outline card-tabs">
+                                            <div class="card-header p-0 pt-1 border-bottom-0">
+                                              
+                                            <div class="card-body">
+                                                <div class="scroll-container">
+                                                    <div style="overflow: scroll">
+                                                        <div class="tab-content" id="custom-tabs-three-tabContent">
+                                                            <div class="tab-pane fade show active" id="custom-tabs-three-home"
+                                                                role="tabpanel" aria-labelledby="custom-tabs-three-received-tab">
+                                                                @if ($sevice_orders->count())
+                                                                    <table id="datatable-buttons"
+                                                                        class="table table-bordered table-striped">
+                                                                        <thead>
+                                                                        <tr>
+                                                                            <th>#</th>
+                                                                            <th>View Order</th>
+                                                                            <th>Invoice</th>
+                                                                            <th>Order Number</th>
+                                                                            <th>Full Name</th>
+                                                                            <th>Email</th>
+                                                                            <th>Phone</th>
+                                                                            <th>Transaction Amount</th>
+                                                                            <th>Transaction Id</th>
+                                                                            <th>Created Date & Time</th>
+
+                                                                        </tr>
+                                                                        </thead>
+                                                                        <tbody id="data-table-body">
+                                                                            @foreach ($sevice_orders as $key => $value)
+                                                                            <tr>
+                                                                                <td>{{ $loop->iteration }}</td>
+                                                                                <td>  <a  class="btn btn-block btn-outline-primary"
+                                                                                    href="{{ route('patient-invoice', ['transaction_data' => encrypt($value->id)]) }}" class="btn btn-primary">Invoice Download</a>
+                                                                                    
+                                                                            </td>
+                                                                                
+                                                                                @if(!empty($value->payment_intent))
+                                                                                <td>
+                                                                                    <a type="button" class="btn btn-block btn-outline-dark"
+                                                                                        data-bs-toggle="modal" data-bs-target="#statement_view_{{ $value['id'] }}"
+                                                                                        onclick="StatementView({{ $key }},'{{ $value['order_id'] }}')">
+                                                                                        Statement
+                                                                                    </a>
+                                                                                </td>
+                                                                                @else
+                                                                                <td> <span class="badge bg-danger">No Payment</span></td>
+                                                                                @endif
+                                                                                <td>{{ $value->order_id }}</td>
+                                                                                <td>{{ $value->fname . ' ' . $value->lname }}</td>
+                                                                                <td>{{ $value->email }}</td>
+                                                                                <td>{{ $value->phone }}</td>
+                                                                                <td>{{ $value->final_amount }}</td>
+                                                                                <td>{{ $value->payment_intent }}</td>
+                                                                                <td>{{ date('m-d-Y h:i:m', strtotime($value->updated_at)) }}
+                                                                                </td>
+
+                                                                            </tr>
+                                                                        @endforeach
+                                                                            <br>
+                                                                            {{ $sevice_orders->links() }}
+                                                                        </tbody>
+                                                                    </table>
+                                                                    {{ $sevice_orders->links() }}
+                                                                @else
+                                                                    <hr>
+                                                                    <p> No data found</p>
+                                                                @endif
+                                                            </div>
+                                                            
+                                                        </div>
+                                                    </div>
+                                                    <!-- /.card -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
                                 <!-- /.tab-pane -->
                             </div>
                             <!-- /.tab-content -->

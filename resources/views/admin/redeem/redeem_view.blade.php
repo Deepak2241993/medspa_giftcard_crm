@@ -48,18 +48,37 @@
                         <td>{{ $value['giftnumber'] }}</td>
                         <td>{{ '$'.$value['total_amount'] }}</td>
                         <td>{!! $value['status']!=0?'<span class="badge text-bg-success">Active</span>':'<span class="badge text-bg-danger">Inactive</span>' !!}</td>
-                        <td>
-                            @if($value['status']!=0 && $value['total_amount']!=0)
-                            <a type="button"  class="btn btn-block btn-outline-success" data-bs-toggle="modal" data-bs-target="#redeem_{{$value['user_id']}}" onclick="modalopen({{$value['user_id']}},'{{$value['giftnumber']}}','{{$value['total_amount']}}')">
-                           Redeem
-                            </a> | <a type="button"  class="btn btn-block btn-outline-danger" data-bs-toggle="modal" data-bs-target="#docancel_{{$value['user_id']}}" onclick="docancel({{$value['user_id']}},'{{$value['giftnumber']}}')">
-                               CAncel Giftcard
-                                 </a> |
+                        <td class="text-center">
+                            @if($value['status'] != 0 && $value['total_amount'] != 0)
+                                <a type="button" 
+                                class="btn btn-sm btn-outline-success me-1" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#redeem_{{ $value['user_id'] }}" 
+                                onclick="modalopen({{ $value['user_id'] }}, '{{ $value['giftnumber'] }}', '{{ $value['total_amount'] }}')" 
+                                title="Redeem Giftcard">
+                                    <i class="fa fa-check"></i>
+                                </a>
+
+                                <a type="button" 
+                                class="btn btn-sm btn-outline-danger me-1" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#docancel_{{ $value['user_id'] }}" 
+                                onclick="docancel({{ $value['user_id'] }}, '{{ $value['giftnumber'] }}')" 
+                                title="Cancel Giftcard">
+                                    <i class="fa fa-times"></i>
+                                </a>
                             @endif
-                        <a type="button"  class="btn btn-block btn-outline-primary" data-bs-toggle="modal" data-bs-target="#Statment_{{$value['user_id']}}" onclick="Statment({{$value['user_id']}},'{{$value['giftnumber']}}')">
-                            View History</a>
-                        
+
+                            <a type="button" 
+                            class="btn btn-sm btn-outline-primary" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#Statment_{{ $value['user_id'] }}" 
+                            onclick="Statment({{ $value['user_id'] }}, '{{ $value['giftnumber'] }}')" 
+                            title="View History">
+                                <i class="fa fa-history"></i>
+                            </a>
                         </td>
+
                         <!-- Button trigger modal -->
                     </tr>
                    

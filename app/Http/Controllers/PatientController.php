@@ -68,7 +68,7 @@ class PatientController extends Controller
      * @param  \App\Models\Patient  $patient
      * @return \Illuminate\Http\Response
      */
-    public function edit(Patient $patient,Request $request)
+    public function edit(Patient $patient,Request $request, TransactionHistory $transaction)
     {
         // $timeline = TimelineEvent::where('patient_id',$patient->patient_login_id)->orderBy('created_at','DESC')->get();
 
@@ -83,9 +83,34 @@ class PatientController extends Controller
             // Show latest 10 entries by default
             $query->latest()->limit(10);
         }
-    
         $timeline = $query->get();
-        return view('admin.patient.create',compact('patient','timeline'));
+
+        // For Giftcards-Order
+        $giftcards = Giftsend::where(function($query) use ($patient) {
+            $query->whereColumn('gift_send_to', 'receipt_email')
+                  ->whereNull('recipient_name')
+                  ->where('gift_send_to', $patient->patient_login_id);
+        })
+
+        // For Services-Order
+        ->orWhere(function($query) use ($patient) {
+            $query->whereColumn('gift_send_to', '!=', 'receipt_email')
+                  ->whereNotNull('recipient_name')
+                  ->where('gift_send_to', $patient->patient_login_id);
+        })
+        ->orderBy('id', 'DESC')
+        ->get();
+
+        $patient_login_id = $patient->patient_login_id;
+        // For Giftcards Orders
+        $mygiftcards = Giftsend::getReceivedGiftcards($patient_login_id)->orderBy('id', 'DESC')->paginate(10);
+        $sendgiftcards = Giftsend::getSentGiftcards($patient_login_id)->orderBy('id', 'DESC')->paginate(10);
+
+        // Services Order
+        $email = $patient->email;
+        $sevice_orders = $transaction->where('email',$email)->orderBy('id','DESC')->paginate(10);
+
+        return view('admin.patient.create',compact('patient','timeline','mygiftcards','sendgiftcards','sevice_orders'));
     }
 
     /**
@@ -126,6 +151,7 @@ class PatientController extends Controller
             }
 
             // Save the updated patient record
+            // dd($patient);
             $patient->save();
 
             return redirect()->back()->with('success', 'Patient details updated successfully.');
@@ -230,26 +256,13 @@ class PatientController extends Controller
 
         //  For purchased Gift cards Show
          public function Mygiftcards(Patient $patient)
-         {
-            $patient_login_id = Auth::guard('patient')->user()->patient_login_id ;
-            
-            $mygiftcards = Giftsend::where(function($query) use ($patient_login_id) {
-                $query->whereColumn('gift_send_to', 'receipt_email')
-                      ->where('recipient_name', null)
-                      ->where('gift_send_to', $patient_login_id);
-            })
-            ->orWhere(function($query) use ($patient_login_id) {
-                $query->whereColumn('gift_send_to', '!=', 'receipt_email')
-                      ->whereNotNull('recipient_name')
-                      ->where('gift_send_to', $patient_login_id);
-            })
-            ->orderBy('id', 'DESC')
-            ->paginate(10);
+            {
+                $patient_login_id = Auth::guard('patient')->user()->patient_login_id;
+                $mygiftcards = Giftsend::getReceivedGiftcards($patient_login_id)->orderBy('id', 'DESC')->paginate(10);
+                $sendgiftcards = Giftsend::getSentGiftcards($patient_login_id)->orderBy('id', 'DESC')->paginate(10);
+                return view('patient.giftcards.my-giftcards', compact('mygiftcards', 'sendgiftcards'));
+            }
 
-            $sendgiftcards = Giftsend::where('recipient_name','!=',null)->where('receipt_email',$patient_login_id)->orderBy('id','DESC')->paginate(10);
-
-            return view('patient.giftcards.my-giftcards',compact('mygiftcards','sendgiftcards'));
-         }
 
         //   Fro GiftcardRedeem View Page
         public function GiftcardsStatement(Request $request,Patient $patient,$id,GiftcardsNumbers $numbers)
