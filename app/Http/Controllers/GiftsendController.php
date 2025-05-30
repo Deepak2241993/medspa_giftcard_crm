@@ -122,10 +122,19 @@ class GiftsendController extends Controller
 
     public function sendgift(Request $request){
         $data_arr = $request->except('_token');
+        if($request->patient_login_id !=null)
+        {
         $data_arr['receipt_email'] = $request->patient_login_id;
+        $data_arr['usertype'] = 'regular';
+        }
+        else{
+            $data_arr['receipt_email'] = $request->receipt_email;
+            $data_arr['usertype'] = 'guest';
+        }
+        
         // find User exist or not
         $patient = Patient::where('email',$request->gift_send_to)->first();
-        if($patient->patient_login_id != null)
+        if($patient != null && $patient->patient_login_id != null)
         {
             $data_arr['gift_send_to'] = $patient->patient_login_id;
         }
@@ -192,15 +201,24 @@ class GiftsendController extends Controller
         $data_arr = $request->except('_token');
 
         $patient = Patient::where('email',$request->gift_send_to)->first();
-        if($patient->patient_login_id != null)
+
+        if($patient != null && $patient->patient_login_id != null)
         {
+            //  for gift send to self
             $data_arr['gift_send_to'] =  $patient->patient_login_id;
             $data_arr['receipt_email'] = $patient->patient_login_id;
+            $data_arr['usertype'] = 'regular';
+        }
+        else{
+            $data_arr['gift_send_to'] =  $request->to_email;
+            $data_arr['receipt_email'] = $request->to_email;
+            $data_arr['usertype'] = 'guest';
         }
        
 
         $data_arr['amount'] = $data_arr['amount'] / $data_arr['qty'];
         $data = json_encode($data_arr);
+        // dd($data);
         //  First API
         $resultData =$this->postAPI('gift-for-self',$data);
         $result=json_decode($resultData['result']);

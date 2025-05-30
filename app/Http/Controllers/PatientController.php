@@ -303,18 +303,36 @@ class PatientController extends Controller
         }
     }
     
-    public function storeAmount(Request $request)
+   public function storeAmount(Request $request)
     {
-        $request->validate(['amount' => 'required|numeric']);
+        // Validate the amount input
+        $request->validate([
+            'amount' => 'required|numeric',
+        ]);
+
+        // Store amount in session
         Session::put('amount', $request->amount);
 
         // Check if the patient is logged in
         if (Auth::guard('patient')->check()) {
-            return response()->json(['logged_in' => true]);
+            $patient = Auth::guard('patient')->user();
+
+            // Optionally store patient name in session if not already there
+            Session::put('result.name', $patient->fname . ' ' . $patient->lname);
+            Session::put('patient_details', $patient);
+
+            return response()->json([
+                'logged_in' => true,
+                'message' => 'Amount saved and patient is logged in.',
+            ]);
         } else {
-            return response()->json(['logged_in' => false]);
+            return response()->json([
+                'logged_in' => false,
+                'message' => 'Please login first to continue.',
+            ]);
         }
     }
+
 
     public function removeAmount(Request $request)
     {

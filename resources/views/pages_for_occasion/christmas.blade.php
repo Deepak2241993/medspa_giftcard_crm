@@ -27,6 +27,7 @@
    font-weight: bold;
    }
 </style>
+
 <!-- wish -->
 <div class="about-box" style="padding-bottom: 0;">
    <div class="about-a1" style="background:#f7f7f7;margin-top: 50px; padding: 40px 20px 50px 20px;">
@@ -183,6 +184,7 @@
                                              </ul>
                                              {{-- <input type="button" name="next" class="next" value="Next Step"/> --}}
                                           </fieldset>
+
                                           <fieldset id="secondbox">
                                              <h2 id="amountdisplay" amount="0" finalAmount="0"
                                                 coupondiscount="0"></h2>
@@ -374,6 +376,7 @@
                                              </form>
 
                                           </fieldset>
+                                          
                                           <fieldset id="paymentdbox" class="p-4">
                                           <h2 class="fs-title">Order summary</h2>
                                           <div id="paymentresult"></div>
@@ -424,6 +427,28 @@
       </div>
    </div>
 </div>
+{{-- Modal Code --}}
+<!-- Modal for prompting login or guest buy -->
+<div id="loginPromptModal" class="modal" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Login Required</h5>
+                <button type="button" class="close" onclick="closeLoginPromptModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>You need to log in to continue. Or proceed as a guest.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="redirectToLogin()">Login</button>
+                <button class="btn btn-dark" onclick="SignUp()">Guest Buy</button>
+                <button class="btn btn-secondary" onclick="closeLoginPromptModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- Modal Code End --}}
 <!-- wish us -->
 {{-- best deals  --}}
 <div id="redeem" class="services-box main-timeline-box">
@@ -466,6 +491,9 @@
 <script src="{{ url('/') }}/giftcards/js/custom.js"></script>
 <script src="{{ url('/') }}/giftcards/js/giftcard.js"></script>
 <script src="https://ampath.com/asset/js/jquery.validate.min.js"></script>
+
+<!-- SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 {{--  form validation --}}
 <script>
    //  for self validation
@@ -913,9 +941,8 @@
    //  for amount move to next window
    function fixamount(amount) {
     if (amount != "" && amount != 0) {
-        // Use AJAX to store the amount in the session
         $.ajax({
-            url: "{{ route('store-amount') }}", // Create this route
+            url: "{{ route('store-amount') }}",
             method: 'POST',
             data: {
                 _token: "{{ csrf_token() }}",
@@ -930,8 +957,14 @@
                     $("#amountdisplay").attr('amount', amount);
                     $("#amountdisplay").attr('finalAmount', amount);
                 } else {
-                    window.location.href = "{{ route('patient-login') }}";
+                    // Show login modal
+                    document.getElementById('loginPromptModal').style.display = 'block';
+                    // Store amount in data attribute for use in redirect
+                    document.getElementById('loginPromptModal').setAttribute('data-amount', amount);
                 }
+            },
+            error: function(xhr) {
+                alert("An error occurred. Please try again.");
             }
         });
     } else {
@@ -939,6 +972,17 @@
         $('#secondbox').hide();
     }
 }
+
+function redirectToLogin() {
+    const amount = document.getElementById('loginPromptModal').getAttribute('data-amount');
+    window.location.href = "{{ route('patient-login') }}" + "?amount=" + amount;
+}
+
+function closeLoginModal() {
+    document.getElementById('loginPromptModal').style.display = 'none';
+}
+
+
 
 function firstboxshow() {
     // Redirect to the remove-amount route
@@ -990,5 +1034,32 @@ function customeamount(amount){
     }
     
     }
+// Modal RElated Functions
+function closeLoginPromptModal() {
+    document.getElementById('loginPromptModal').style.display = 'none';
+}
+
+function redirectToLogin() {
+    var modal = document.getElementById('loginPromptModal');
+    var amount = modal.getAttribute('data-amount');
+    window.location.href = "{{ route('patient-login') }}?amount=" + amount;
+}
+
+function SignUp() {
+    var modal = document.getElementById('loginPromptModal');
+    var amount = modal.getAttribute('data-amount');
+
+    // Hide modal
+    modal.style.display = 'none';
+
+    // Proceed as guest – show second box and fill amount
+    $('#secondbox').show();
+    $('#firstbox').hide();
+    $('#personal').addClass('active');
+    $("#amountdisplay").html('1 X $' + amount + ' gift card');
+    $("#amountdisplay").attr('amount', amount);
+    $("#amountdisplay").attr('finalAmount', amount);
+}
+
 </script>
 @endpush

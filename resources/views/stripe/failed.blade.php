@@ -178,6 +178,15 @@
            <li>Admins at the Welness centre will check the details of the giftcard and process the transaction as per need of the customer</li>
         </ol>
      </div>
+<div class="container mt-4">
+    @if(session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
+
+    <!-- Your other content -->
+</div>
 
 
     <center class="mb-2">
