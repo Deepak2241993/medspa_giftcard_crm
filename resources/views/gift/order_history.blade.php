@@ -82,8 +82,9 @@
                             <td>{{ $value->city }}</td>
                             <td>{{ $value->country }}</td>
                             <td>{{ $value->payment_intent }}</td>
-                            <td>${{ number_format($value->final_amount, 2) }}</td>
-                            <td>${{ number_format($value->transaction_amount, 2) }}</td>
+                            <td>${{ number_format((float) $value->final_amount, 2) }}</td>
+                            <td>${{ number_format((float) $value->transaction_amount, 2) }}</td>
+
                             <td>{{ $value->gift_card_applyed ? 'Yes' : 'No' }}
                             </td>
                             <td>

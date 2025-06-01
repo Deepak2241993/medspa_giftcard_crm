@@ -207,7 +207,11 @@ class StripeController extends Controller
                     Log::info('Gift receipt email sent', ['to' => $tomail]);
                 }
                 
-                event(new GiftcardPurchases($transaction_entry));
+                if($giftsend->usertype == 'regular' && $giftsend->patient_login_id != null)
+                {
+                    event(new GiftcardPurchases($transaction_entry));
+                }
+               
     
                 Session::pull('amount');
                 return view('stripe.thanks', compact('data'))->with('success', 'Payment successful.');

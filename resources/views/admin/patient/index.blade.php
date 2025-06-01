@@ -78,8 +78,24 @@
                                     <td>{{$loop->iteration}}</td>
                                     <td>
                                         
-                                        <a href="{{route('patient.edit',$value->id)}}"
-                                             class="btn btn-block btn-outline-primary mb-2">Edit</a>
+                                        <div class="btn-group mb-2" role="group" aria-label="Quick Actions">
+                                            <a href="{{ route('patient.edit', $value->id) }}" class="btn btn-outline-primary btn-sm" title="View Profile">
+                                                <i class="fa fa-user"></i>
+                                            </a>
+
+                                            <a href="{{ route('giftcards-sale') }}" class="btn btn-outline-success btn-sm" title="Buy Giftcard">
+                                                <i class="fa fa-gift"></i>
+                                            </a>
+
+                                            <a href="{{ route('product.index') }}" class="btn btn-outline-info btn-sm" title="Buy Services & Deals">
+                                                <i class="fa fa-dna"></i>
+                                            </a>
+
+                                            <a href="{{ route('program.index') }}" class="btn btn-outline-warning btn-sm" title="Buy Program">
+                                                <i class="fa fa-stethoscope"></i>
+                                            </a>
+                                        </div>
+
                                         {{-- <form
                                             action="{{route('patient.destroy',$value->id)}}"
                                             method="POST">

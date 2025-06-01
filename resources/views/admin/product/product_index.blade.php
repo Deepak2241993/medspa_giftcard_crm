@@ -169,15 +169,25 @@
 
                             <td>{{ $value['unit_id'] != null ? 'Unit Service' : 'Normal Deals & Service' }}
                             </td>
-                            <td>
-                                <a href="{{ route('product.edit', $value['id']) }}"
-                                    class="btn btn-block btn-outline-primary">Edit</a>
-                                <form action="{{ route('product.destroy', $value['id']) }}" method="POST">
-                                    @method('DELETE')
-                                    @csrf<!-- Include CSRF token for security -->
-                                    <button class="btn btn-block btn-outline-danger" type="submit">Delete</button>
-                                </form>
-                            </td>
+                            <td class="text-center">
+                            <a href="{{ route('product.edit', $value['id']) }}"
+                            class="btn btn-sm btn-outline-primary me-1"
+                            title="Edit">
+                                <i class="fa fa-edit"></i>
+                            </a>
+
+                            <form action="{{ route('product.destroy', $value['id']) }}" method="POST" class="d-inline">
+                                @method('DELETE')
+                                @csrf
+                                <button class="btn btn-sm btn-outline-danger"
+                                        type="submit"
+                                        title="Delete"
+                                        onclick="return confirm('Are you sure you want to delete this product?')">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+
 
 
                             <!-- Button trigger modal -->

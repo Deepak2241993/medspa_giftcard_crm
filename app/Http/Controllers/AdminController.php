@@ -89,9 +89,12 @@ class AdminController extends Controller
 
     // Befor Login Update Data of Patient Timeline of giftcard from center purchase  and giftcard table
     $patient = Patient::where('patient_login_id', $request->patient_login_id)->first();
+    if($patient)
+    {
     Giftsend::where('gift_send_to', $patient->email)->update(['gift_send_to' => $patient->patient_login_id]);
     Giftsend::where('receipt_email', $patient->email)->update(['receipt_email' => $patient->patient_login_id]);
     TimelineEvent::where('patient_id', $patient->email)->update(['patient_id' => $patient->patient_login_id]);
+    }
 
     // Attempt login
     if (Auth::guard('patient')->attempt($credentials)) {

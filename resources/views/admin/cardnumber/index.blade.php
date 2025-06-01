@@ -123,7 +123,7 @@
                                                     </a>
                                                     @else
                                                     <a type="button"  class="btn btn-block btn-outline-danger">
-                                                    No Payment
+                                                    Transaction Failed
                                                 </a>
                                                 @endif
                                                    
