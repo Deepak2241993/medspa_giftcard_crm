@@ -197,7 +197,7 @@
                                             style="box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;">
                                             <div class="logo" style="background-color:#fca52a; padding:20px;">
                                                 <a class="navbar-brand" href="https://myforevermedspa.com"><img
-                                                        src="https://forevermedspanj.com/wp-content/uploads/2019/07/forever-white-1.png"
+                                                        src="{{url('/images/gifts/logo.png')}}"
                                                         alt="image" style="height:70px;"></a>
                                             </div>
                                             <table id="u_content_heading_3"
