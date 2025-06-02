@@ -179,11 +179,11 @@
         </ol>
      </div>
 <div class="container mt-4">
-    @if(session('error'))
-        <div class="alert alert-danger">
-            {{ session('error') }}
-        </div>
-    @endif
+@if(session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+@endif
 
     <!-- Your other content -->
 </div>
@@ -191,6 +191,12 @@
 
     <center class="mb-2">
         <a href="{{ url('/') }}"  class="btn btn-primary mr-2">Home</a>
+        <p>@if(session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+@endif
+</p>
         {{-- <button  class="btn btn-block btn-outline-success" id="printButton" onclick="printDiv()">Print</button> --}}
     </center>
 	

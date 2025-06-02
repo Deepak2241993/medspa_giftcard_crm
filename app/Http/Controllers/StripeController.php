@@ -190,18 +190,27 @@ class StripeController extends Controller
                         $GeneratedGiftcards[] = $gift_card_code;
                     }
                 }
-            $gift_send_to = $giftsend->gift_send_to;
+
+                // dd($giftsend);
+
             $tomail = $giftsend->receipt_email;
 
+            // dd($giftsend);
             // This section handles the email sending logic based on user type
-            if (in_array($giftsend->usertype, ['regular', 'guest']) && $giftsend->patient_login_id != null) {
-            $gift_send_to = Patient::where('patient_login_id', $giftsend->gift_send_to)
-                ->value('email') ?? $giftsend->gift_send_to;
+            if (in_array($giftsend->usertype, ['regular', 'guest'])) {
 
-            $tomail = Patient::where('patient_login_id', $giftsend->receipt_email)
+            $gift_send_to = $giftsend->gift_send_to;
+            $receipt_email = Patient::where('patient_login_id', $giftsend->receipt_email)
                 ->value('email') ?? $giftsend->receipt_email;
-        }
 
+
+            // update giftcard table email with user_name
+            // if giftcard receiver person is older user in system all ready exiest
+           $receiver_patient_id = Patient::where('email', $giftsend->gift_send_to)
+                ->value('patient_login_id') ?? $giftsend->gift_send_to;
+            $giftsend->update(['gift_send_to' => $receiver_patient_id]);
+            }
+            
 
           
     
@@ -211,8 +220,8 @@ class StripeController extends Controller
                 }
     
                 if (!empty($giftsend->recipient_name)) {
-                    Mail::to($tomail)->send(new GiftReceipt($giftsend));
-                    Log::info('Gift receipt email sent', ['to' => $tomail]);
+                    Mail::to($receipt_email)->send(new GiftReceipt($giftsend));
+                    Log::info('Gift receipt email sent', ['to' => $receipt_email]);
                 }
                 
                 if($giftsend->usertype == 'regular' && $giftsend->patient_login_id != null)

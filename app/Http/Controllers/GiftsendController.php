@@ -122,26 +122,24 @@ class GiftsendController extends Controller
 
     public function sendgift(Request $request){
         $data_arr = $request->except('_token');
+   
+       
+        // find User exist or not
         if($request->patient_login_id !=null)
         {
+        $data_arr['gift_send_to'] = $request->gift_send_to;
         $data_arr['receipt_email'] = $request->patient_login_id;
         $data_arr['usertype'] = 'regular';
         }
+        
         else{
             $data_arr['receipt_email'] = $request->receipt_email;
+            $data_arr['gift_send_to'] = $request->gift_send_to;
             $data_arr['usertype'] = 'guest';
         }
         
-        // find User exist or not
-        $patient = Patient::where('email',$request->gift_send_to)->first();
-        if($patient != null && $patient->patient_login_id != null)
-        {
-            $data_arr['gift_send_to'] = $patient->patient_login_id;
-        }
-        else{
-            $data_arr['gift_send_to'] = $request->gift_send_to;
-        }
-       
+         
+        // dd($data_arr);
         $data_arr['amount'] = $data_arr['amount'] / $data_arr['qty'];
         $data = json_encode($data_arr);
         //  First API
