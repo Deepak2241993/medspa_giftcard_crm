@@ -190,7 +190,7 @@ class StripeController extends Controller
                         $GeneratedGiftcards[] = $gift_card_code;
                     }
                 }
-            $gift_send_to = $giftsend->receipt_email;
+            $gift_send_to = $giftsend->gift_send_to;
             $tomail = $giftsend->receipt_email;
 
             // This section handles the email sending logic based on user type
