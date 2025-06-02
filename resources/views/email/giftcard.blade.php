@@ -1,6 +1,9 @@
 @php
-    // $mail_data=['qty'=>1,'amount'=>25,'your_name'=>'deepak','recipient_name'=>'','message'=>'test','gift_send_to'=>'deepak@thetemz.com','receipt_email'=>'deepakprasad224@gmail.com','transaction_id'=>'card_1PWvpdHXhy3bfGAtfIzHmifj'];
-    // $mail_data = (object) $mail_data;
+/*
+    $mail_data=['qty'=>1,'amount'=>25,'your_name'=>'deepak','recipient_name'=>'','message'=>'test','gift_send_to'=>'deepak@thetemz.com','receipt_email'=>'deepakprasad224@gmail.com','transaction_id'=>'card_1PWvpdHXhy3bfGAtfIzHmifj'];
+    $mail_data = (object) $mail_data;
+*/
+
     $cardnumber = App\Models\GiftcardsNumbers::where('transaction_id', $mail_data->transaction_id)->get();
     $template_data = App\Models\EmailTemplate::where('id', $mail_data->event_id)->get();
     // $template_data = App\Models\EmailTemplate::where('id',5)->get();
@@ -605,7 +608,7 @@
                     {{-- Gift Card Generate --}}
                     @foreach ($cardnumber as $value)
                         <div class="u-row-container"
-                            style="padding: 36px 0px;background-image: url('{{ url('/email_template') }}/1695808724401-Rectangle%202%20copy%202.png');background-repeat: no-repeat;background-position: center center;background-color: transparent">
+                            style="padding: 36px 0px;background-image: url('{{ url('/email_template') }}/giftcards_number_show.png');background-repeat: no-repeat;background-position: center center;background-color: transparent">
                             <div class="u-row"
                                 style="margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;">
                                 <div
