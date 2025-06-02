@@ -197,18 +197,9 @@ class StripeController extends Controller
                 $gift_send_to = Patient::where('patient_login_id', $giftsend->gift_send_to)
                     ->value('email') ?? $giftsend->gift_send_to;
 
-                if($gift_send_to)
-                {
-                    $gift_send_to = $giftsend->gift_send_to;
-                }
-
             //  This Line For GiftSender Email Get
                 $tomail = Patient::where('patient_login_id', $giftsend->receipt_email)
                     ->value('email') ?? $giftsend->receipt_email;
-                    if($tomail)
-                    {
-                        $tomail = $giftsend->receipt_email;
-                    }
             }
             else  if($giftsend->usertype == 'guest' && $giftsend->patient_login_id != null)
             {
@@ -216,18 +207,9 @@ class StripeController extends Controller
                 $gift_send_to = Patient::where('patient_login_id', $giftsend->gift_send_to)
                     ->value('email') ?? $giftsend->gift_send_to;
 
-                if($gift_send_to)
-                {
-                    $gift_send_to = $giftsend->gift_send_to;
-                }
-
             //  This Line For GiftSender Email Get
                 $tomail = Patient::where('patient_login_id', $giftsend->receipt_email)
                     ->value('email') ?? $giftsend->receipt_email;
-                    if($tomail)
-                    {
-                        $tomail = $giftsend->receipt_email;
-                    }
             }
 
           
