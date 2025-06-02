@@ -147,6 +147,7 @@ Route::post('servic-checkout-process','PopularOfferController@CheckoutProcess')-
 
 Route::post('internal-service-purchase','StripeController@InternalServicePurchase')->name('InternalServicePurchases');
 Route::get('/invoice/{transaction_data}', 'PopularOfferController@invoice')->name('service-invoice');
+Route::get('/giftcards-statement-admin-view/{id}', 'PatientController@GiftcardsStatementAdminView')->name('giftcards-statement-admin-view');
 Route::resource('/terms', TermController::class);
 Route::resource('/program', ProgramController::class);
 Route::resource('/product', ProductController::class);
@@ -166,6 +167,7 @@ Route::post('/patient-quick-create',[AdminController::class,'PatientQuickCreate'
     Route::get('/patient-profile', 'PatientController@PatientProfile')->name('patient-profile');
     Route::get('/my-giftcards', 'PatientController@Mygiftcards')->name('my-giftcards');
     Route::get('/giftcards-statement/{id}', 'PatientController@GiftcardsStatement')->name('giftcards-statement');
+    
     Route::get('/my-services', 'PatientController@Myservices')->name('my-services');
     Route::get('/patient-invoice/{transaction_data}', 'PatientController@Patientinvoice')->name('patient-invoice');
     });

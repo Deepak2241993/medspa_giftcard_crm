@@ -285,6 +285,28 @@ class PatientController extends Controller
             return view('patient.giftcards.redeem_statement',compact('giftcards','data','totalAmount','actual_paid_amount'));
         }
 
+           //   Fro GiftcardRedeem View Page
+       public function GiftcardsStatementAdminView(Request $request,Patient $patient,$id,GiftcardsNumbers $numbers)
+            {
+            $previousUrl = url()->previous();
+            $giftcards = GiftcardsNumbers::where('user_id', $id)
+            ->orderBy('id', 'DESC')
+            ->get();
+            $token ='FOREVER-MEDSPA';
+        //  For Statement of Giftcard
+            $data=$numbers->select('giftcards_numbers.transaction_id','giftcards_numbers.user_token','giftcards_numbers.giftnumber','giftcards_numbers.amount','giftcards_numbers.comments','giftcards_numbers.actual_paid_amount','giftcards_numbers.updated_at')->Where('giftnumber',$giftcards[0]['giftnumber'])->where('user_token',$token)->get();
+            $totalAmount = 0;
+            $actual_paid_amount = 0;
+        
+            // Iterate over each record in the collection and sum up the 'amount' values
+            foreach ($data as $record) {
+                $totalAmount += $record->amount;
+                $actual_paid_amount += $record->actual_paid_amount;
+            }
+        
+            return view('patient.giftcards.giftcard_statement_admin_view',compact('giftcards','data','totalAmount','actual_paid_amount','previousUrl'));
+        }
+
         // My Services
        public function Myservices(TransactionHistory $transaction){
         $email = Auth::guard('patient')->user()->email;
@@ -443,8 +465,5 @@ class PatientController extends Controller
             'giftcards' => $formattedGiftcards,
         ]);
     }
-    
-
-    
 
 }

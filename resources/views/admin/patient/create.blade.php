@@ -331,6 +331,7 @@
                                                 <div class="scroll-container">
                                                     <div style="overflow: scroll">
                                                         <div class="tab-content" id="custom-tabs-three-tabContent">
+                                                            {{-- For Mygiftcards Sends --}}
                                                             <div class="tab-pane fade show active" id="custom-tabs-three-home"
                                                                 role="tabpanel" aria-labelledby="custom-tabs-three-received-tab">
                                                                 @if ($mygiftcards->count())
@@ -343,7 +344,7 @@
                                                                                 <th>Giftcard History</th>
                                                                                 <th>Generated Date & Time</th>
                                                                                 <th>Sender Name</th>
-                                                                                <th>Message</th>
+                                                                                {{-- <th>Message</th> --}}
                                                                                 {{-- <th>Sender's Email</th> --}}
                                                                                 <th>Coupon Code</th>
                                                                                 <th>Qty</th>
@@ -370,12 +371,10 @@
 
                                                                                     </td>
                                                                                     <td>
-                                                                                        <a type="button"
-                                                                                            class="btn btn-block btn-outline-dark"
-                                                                                            href="{{ route('giftcards-statement', $value['id']) }}">
-                                                                                            History
-                                                                                        </a>
-
+                                                                                        <a type="button" class="btn btn-block btn-outline-dark" href="{{route('giftcards-statement-admin-view', $value['id'])}}">
+                                                                            History
+                                                                        </a>
+                                                                                       
                                                                                     </td>
                                                                                     <td><?php echo date('m-d-Y h:i:A', strtotime($value['created_at'])); ?></td>
                                                                                 
@@ -389,7 +388,7 @@
                                                                                         }
                                                                                         @endif
                                                                                     </td>
-                                                                                    <td>{{ $value['recipient_name'] ? $value['message'] : '---' }}
+                                                                                    {{-- <td>{{ $value['recipient_name'] ? $value['message'] : '---' }} --}}
                                                                                     </td>
                                                                                     {{-- <td>{{ $value['recipient_name'] ? $value['receipt_email'] : 'Medspa' }}</td> --}}
                                                                                     <td class="text-uppercase">
@@ -440,6 +439,7 @@
                                                                 @endif
                                                             </div>
                                                             {{-- All Giftcard Send  --}}
+
                                                             <div class="tab-pane fade" id="custom-tabs-three-profile" role="tabpanel"
                                                                 aria-labelledby="custom-tabs-three-send-tab">
                                                                 @if ($sendgiftcards->count())
@@ -481,7 +481,7 @@
                                                                                 <td>
                                                                                     <a type="button"
                                                                                         class="btn btn-block btn-outline-dark"
-                                                                                        href="{{ route('giftcards-statement', $value['id']) }}">
+                                                                                        href="{{ route('giftcards-statement-admin-view', $value['id']) }}">
                                                                                         History
                                                                                     </a>
 
@@ -592,7 +592,7 @@
                                                                             <tr>
                                                                                 <td>{{ $loop->iteration }}</td>
                                                                                 <td>  <a  class="btn btn-block btn-outline-primary"
-                                                                                    href="{{ route('patient-invoice', ['transaction_data' => encrypt($value->id)]) }}" class="btn btn-primary">Invoice Download</a>
+                                                                                    href="{{ route('service-invoice',$value->id) }}" class="btn btn-primary">Invoice Download</a>
                                                                                     
                                                                             </td>
                                                                                 
@@ -651,6 +651,25 @@
             <!-- /.row -->
         </div><!-- /.container-fluid -->
     </section>
+<div class="modal fade deepak" id="staticBackdrop_" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Gift Card Number</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h2 id="giftcardsshow"></h2>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-block btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+</div>
 
     <!-- /.content-wrapper -->
 @endsection
@@ -686,6 +705,40 @@
                 }
             });
         });
+    </script>
+    {{-- For Modal Code --}}
+    <script>
+        //  Giftcard View Modal Code
+        function cardview(id, tid) {
+            $('.deepak').attr('id', 'staticBackdrop_' + id);
+            $('#staticBackdrop_' + id).modal('show');
+
+            $.ajax({
+                url: '{{ route('cardview-route') }}',
+                method: "post",
+                dataType: "json",
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    tid: tid,
+                    user_token: 'FOREVER-MEDSPA',
+                },
+                success: function(response) {
+                    if (response.success) {
+                        $('#giftcardsshow').empty();
+                        $.each(response.result, function(index, element) {
+                            // Create a new element with the giftnumber
+                            var newElement = $('<div>').html(element.giftnumber);
+
+                            // Append the new element to #giftcardsshow
+                            $('#giftcardsshow').append(newElement);
+                        });
+
+                    }
+                }
+            });
+        }
+        
+
     </script>
     <script>
         function toggleSelectOptions() {
