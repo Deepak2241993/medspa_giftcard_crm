@@ -671,6 +671,33 @@
         </div>
 </div>
 
+{{-- Service history Modal Code --}}
+{{-- For Statment View Modal --}}
+    <div class="modal fade statement" id="statement_view_" data-bs-backdrop="static" data-bs-keyboard="false"
+        tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Service Redeem Statement</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div style="display: flex; flex-direction: column;">
+                        <!-- Existing placeholders for other data -->
+                        <!-- Dynamic content area for table -->
+                        <div id="dynamicContent"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-block btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Statement View Modal End --}}
     <!-- /.content-wrapper -->
 @endsection
 
@@ -705,6 +732,101 @@
                 }
             });
         });
+    // Service Use History Modal Code
+    function StatementView(id, order_id) {
+            $('.statement').attr('id', 'statement_view_' + id);
+            $('#statement_view_' + id).modal('show');
+
+            // AJAX request to fetch data
+            $.ajax({
+                url: '{{ route('service-statement') }}',
+                method: "post",
+                dataType: "json",
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    order_id: order_id
+                },
+                success: function(response) {
+                    if (response.success) {
+                        var servicePurchases = response.servicePurchases;
+                        var serviceRedeem = response.serviceRedeem;
+
+                        var tableHTML = `
+                <table cellpadding="0" cellspacing="0" style="font-family:Open Sans,-apple-system,BlinkMacSystemFont,Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;border-collapse:collapse;width:100%; background-color: #f9f9f9; margin: 20px 0;">
+                    <tbody>
+                        <tr>
+                            <td class="content" align="center" style="padding:40px 48px; background-color: #fca52a; color: #ffffff;">
+                                <h1 style="font-weight:300;font-size:28px;line-height:130%;margin:16px 0; text-align:center;">Service Redeem Statement</h1>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="content" style="padding:40px 48px; background-color: #ffffff;">
+                                
+                                <table border="1" cellspacing="0" cellpadding="10" style="font-family:Open Sans,-apple-system,BlinkMacSystemFont,Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;border-collapse:collapse;width:100%; border: 1px solid #ddd; margin-top: 20px;">
+                                    <tr style="background-color: #fca52a; color: white;">
+                                        <th style="padding: 10px; text-align: left;">Transaction Date</th>
+                                        <th style="padding: 10px; text-align: left;">Transaction Number</th>
+                                        <th style="padding: 10px; text-align: left;">Service Name</th>
+                                        <th style="padding: 10px; text-align: left;">Message</th>
+                                        <th style="padding: 10px; text-align: left;">Service Session</th>
+
+                                        <th style="padding: 10px; text-align: left;">Service Session Redeem</th>
+                                    </tr>`;
+
+                        // Loop through each purchase to show credits
+                        $.each(servicePurchases, function(index, item) {
+                            tableHTML += `
+                    <tr style="background-color: #f2f2f2;">
+                        <td style="padding: 10px;">${new Date(item.updated_at).toLocaleDateString()}</td>
+                        <td style="padding: 10px;">${item.order_id}</td>
+                      <td style="padding: 10px;">
+                        ${item.service_type === 'product' ? item.product_name : ''}
+                        ${item.service_type === 'unit' ? item.unit_name : ''}
+</td>
+                        <td style="padding: 10px;">Buy</td>
+                        <td style="padding: 10px;">${item.number_of_session ? item.number_of_session : 'NULL'}</td>
+                        <td style="padding: 10px;">--</td>
+                    </tr>`;
+                        });
+
+                        // Loop through each redemption to show debits
+                        $.each(serviceRedeem, function(index, value) {
+                            tableHTML += `
+                    <tr>
+                        <td style="padding: 10px;">${new Date(value.updated_at).toLocaleDateString()}</td>
+                        <td style="padding: 10px;">${value.transaction_id}</td>
+
+                        <td style="padding: 10px;">
+                        ${value.service_type === 'product' ? value.product_name : ''}
+                        ${value.service_type === 'unit' ? value.unit_name : ''}
+                            </td>
+                        <td style="padding: 10px;">${value.comments ? value.comments : ''}</td>
+                        <td style="padding: 10px;">--</td>
+                        <td style="padding: 10px;">${value.number_of_session_use}</td>
+                    </tr>`;
+                        });
+
+                        tableHTML += `</table>
+                                
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>`;
+
+                        // Append the table HTML to the modal body
+                        $('#statement_view_' + id + ' .modal-body').html(tableHTML);
+                    } else {
+                        // Handle case when response is not successful
+                        $('#statement_view_' + id + ' .modal-body').html('<p>No statement found.</p>');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    // Handle error response
+                    $('#statement_view_' + id + ' .modal-body').html(
+                        '<p>An error occurred. Please try again later.</p>');
+                }
+            });
+        }
     </script>
     {{-- For Modal Code --}}
     <script>
