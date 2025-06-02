@@ -190,27 +190,18 @@ class StripeController extends Controller
                         $GeneratedGiftcards[] = $gift_card_code;
                     }
                 }
-            
-            if($giftsend->usertype == 'regular' && $giftsend->patient_login_id != null)
-            {
-            //  This Line For GiftReceiver Email Get
-                $gift_send_to = Patient::where('patient_login_id', $giftsend->gift_send_to)
-                    ->value('email') ?? $giftsend->gift_send_to;
+            $gift_send_to = $giftsend->receipt_email;
+            $tomail = $giftsend->receipt_email;
 
-            //  This Line For GiftSender Email Get
-                $tomail = Patient::where('patient_login_id', $giftsend->receipt_email)
-                    ->value('email') ?? $giftsend->receipt_email;
-            }
-            else  if($giftsend->usertype == 'guest' && $giftsend->patient_login_id != null)
-            {
-            //  This Line For GiftReceiver Email Get
-                $gift_send_to = Patient::where('patient_login_id', $giftsend->gift_send_to)
-                    ->value('email') ?? $giftsend->gift_send_to;
+            // This section handles the email sending logic based on user type
+            if (in_array($giftsend->usertype, ['regular', 'guest']) && $giftsend->patient_login_id != null) {
+            $gift_send_to = Patient::where('patient_login_id', $giftsend->gift_send_to)
+                ->value('email') ?? $giftsend->gift_send_to;
 
-            //  This Line For GiftSender Email Get
-                $tomail = Patient::where('patient_login_id', $giftsend->receipt_email)
-                    ->value('email') ?? $giftsend->receipt_email;
-            }
+            $tomail = Patient::where('patient_login_id', $giftsend->receipt_email)
+                ->value('email') ?? $giftsend->receipt_email;
+        }
+
 
           
     
