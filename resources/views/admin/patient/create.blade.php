@@ -558,7 +558,7 @@
 
                                    {{-- For Services Orders  --}}
                                 <div class="tab-pane" id="services">
-                                    <h4>Services Orders | <a href="" class="btn btn-primary">Redeem Services</a></h4>
+                                    <h4>Services Orders | <a href="{{route('service-redeem-patient-list',['id'=>$patient->id])}}" class="btn btn-primary">Redeem Services</a></h4>
                                     <div class="col-12 col-sm-12">
                                         <div class="card card-primary card-outline card-tabs">
                                             <div class="card-header p-0 pt-1 border-bottom-0">

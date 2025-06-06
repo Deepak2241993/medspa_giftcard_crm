@@ -127,6 +127,7 @@ Route::get('/export-categories', [CategoryExportController::class, 'exportCatego
 Route::get('/export-categories-with-full-data', [CategoryExportController::class, 'exportCategoriesWithAllFields']);
 Route::get('/export-services', [CategoryExportController::class, 'exportServices']);
 Route::get('/service-redeem','ServiceOrderController@ServiceRedeemView')->name('service-redeem-view');
+Route::get('/service-redeem-patient-list/{id}','ServiceOrderController@ServiceRedeemPatientList')->name('service-redeem-patient-list');
 Route::post('/redeem-services','ServiceOrderController@ServiceRedeem')->name('redeem-services');
 Route::get('/search-order-api','ServiceOrderController@SearchOrderApi')->name('search-order-api');
 Route::get('/patient-search','PatientController@PatientSearch')->name('patient.search');

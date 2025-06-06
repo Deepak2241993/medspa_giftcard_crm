@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ServiceOrder;
 use App\Models\TransactionHistory;
 use App\Models\ServiceRedeem;
+use App\Models\Patient;
 use App\Models\Product;
 use App\Models\ServiceUnit;
 
@@ -116,6 +117,38 @@ class ServiceOrderController extends Controller
           return view('admin.redeem.service_redeem', compact('data'));
       }
       
+   // For Patient List
+public function ServiceRedeemPatientList(Request $request, TransactionHistory $transaction, $id)
+{
+    $patinet = Patient::findOrFail($id);
+    $pemail = $patinet->email;
+    $phone = $patinet->phone;
+    $fname = $patinet->fname;
+    $lname = $patinet->lname;
+
+    // Safely build fullname
+    $fullname = '';
+    if (!empty($fname) && !empty($lname)) {
+        $fullname = strtolower($fname . ' ' . $lname);
+    }
+
+    $query = TransactionHistory::query();
+
+    // Prefer filtering by email if available
+    if (!empty($pemail)) {
+        $query->where('email', $pemail);
+    } elseif (!empty($phone)) {
+        $query->where('phone', $phone);
+    } else {
+        // Return no results if both are missing
+        $query->whereRaw('1 = 0');
+    }
+
+    $data = $query->orderBy('id', 'DESC')->get();
+
+    return view('admin.patient.service_redeem_patient_list', compact('data', 'fullname'));
+}
+
 
       public function ServiceRedeem(Request $request, ServiceRedeem $service_redeem)
         {
