@@ -65,8 +65,8 @@
                                     <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Patient Name">Patient Name</th>
                                     <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Email">Email</th>
                                     <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Phone">Phone</th>
-                                    <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Address">Address</th>
-                                    <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Zip Code">Zip Code</th>
+                                    {{-- <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Address">Address</th>
+                                    <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Zip Code">Zip Code</th> --}}
                                     <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Status">Status</th>
                                 </tr>
                             </thead>
@@ -108,8 +108,8 @@
                                     <td>{{$value->fname ." ".$value->lname }}</td>
                                     <td>{{$value->email }}</td>
                                     <td>{{$value->phone }}</td>
-                                    <td>{{$value->address }}</td>
-                                    <td>{{$value->zip_code }}</td>
+                                    {{-- <td>{{$value->address }}</td>
+                                    <td>{{$value->zip_code }}</td> --}}
                                     <td>
                                         @if($value->status==1)
                                         <span class="badge bg-success">Active</span>

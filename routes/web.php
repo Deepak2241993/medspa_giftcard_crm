@@ -105,6 +105,7 @@ Route::get('/cardgenerated-list','GiftsendController@cardgeneratedList')->name('
 Route::get('/gift-card-transaction-search','GiftsendController@GifttransactionSearch')->name('gift-card-transaction-search');
 Route::post('/cardview-route','APIController@cardview')->name('cardview-route');
 Route::get('/giftcardredeem-view','GiftsendController@giftcardredeemView')->name('giftcardredeem-view');
+Route::get('/giftcardredeem-from-patientlist/{id}','GiftsendController@giftcardredeemPatientList')->name('giftcardredeemPatientList');
 Route::get('/giftcardsearch','GiftsendController@GiftCardSearch')->name('giftcard-search');
 Route::post('/giftcardredeem','GiftsendController@giftcardredeem')->name('giftcardredeem');
 Route::post('/giftcardstatment','GiftsendController@giftcardstatment')->name('giftcardstatment');

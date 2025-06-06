@@ -308,7 +308,7 @@
 
                                 {{-- For Orders  --}}
                                 <div class="tab-pane" id="giftcards">
-                                    <h4>Giftcards Orders</h4>
+                                    <h4>Giftcards Orders | <a href="{{route('giftcardredeemPatientList',['id'=>$patient->id])}}" class="btn btn-primary">Redeem Giftcards</a></h4>
                                     <div class="col-12 col-sm-12">
                                         <div class="card card-primary card-outline card-tabs">
                                             <div class="card-header p-0 pt-1 border-bottom-0">
@@ -492,9 +492,9 @@
                                                                                     
                                                                                         @if ($value['recipient_name'] != null && ($value['gift_send_to'] != $value['receipt_email']))
                                                                                             {{$value['recipient_name']}}
-                                                                                        @else{
-                                                                                            {{!! "<span class='badge bg-primary'>".$value['your_name']."</span>" !!}}
-                                                                                        }
+                                                                                        @else
+                                                                                            <span class='badge bg-primary'>{{$value['your_name']}}</span>
+                                                                                        
                                                                                         @endif
                                                                                 </td>
                                                                                 <td>{{ $value['recipient_name'] ? $value['message'] : '---' }}
@@ -558,7 +558,7 @@
 
                                    {{-- For Services Orders  --}}
                                 <div class="tab-pane" id="services">
-                                    <h4>Services Orders</h4>
+                                    <h4>Services Orders | <a href="" class="btn btn-primary">Redeem Services</a></h4>
                                     <div class="col-12 col-sm-12">
                                         <div class="card card-primary card-outline card-tabs">
                                             <div class="card-header p-0 pt-1 border-bottom-0">

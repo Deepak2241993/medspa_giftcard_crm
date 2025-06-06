@@ -135,8 +135,7 @@
                     <li class="nav-header">
                         <hr>
                     </li>
-                    <li class="nav-header"><i class="fab fa-centos fa-1x mr-2"></i>In Clinic Operations</li>
-                    {{-- <li class="nav-header">In Clinic</li> --}}
+                    <li class="nav-header">In Clinic Operations</li>
                     <li class="nav-item">
                         <a href="#" class="nav-link">
                             <i class="fas fa-capsules fa-1x mr-2"></i>
