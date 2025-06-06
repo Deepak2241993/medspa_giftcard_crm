@@ -461,9 +461,7 @@
                                                                                                 {{ $mail_data->your_name }}
                                                                                                 <br>
                                                                                                 <span
-                                                                                                    style="color:#9b9b9b"><a
-                                                                                                        href="mailto:{{ $mail_data->receipt_email }}"
-                                                                                                        target="_blank">{{ $mail_data->receipt_email }}</a></span>
+                                                                                                    style="color:#9b9b9b">{{ $mail_data->receipt_email }}</span>
                                                                                             </td>
                                                                                         </tr>
                                                                                     </tbody>
@@ -505,9 +503,7 @@
                                                                                                 {{ $mail_data->recipient_name }}
                                                                                                 <br>
                                                                                                 <span
-                                                                                                    style="color:#9b9b9b"><a
-                                                                                                        href="mailto:{{ $mail_data->gift_send_to }}"
-                                                                                                        target="_blank">{{ $mail_data->gift_send_to }}</a></span>
+                                                                                                    style="color:#9b9b9b">{{ $mail_data->gift_send_to }}</span>
                                                                                             </td>
                                                                                         </tr>
                                                                                     </tbody>

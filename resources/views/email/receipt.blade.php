@@ -376,8 +376,7 @@ $newString = str_replace($search, $replace, $string);
                                                                                                                     email
                                                                                                                     {{ $mail_data->recipient_name }}
                                                                                                                     at
-                                                                                                                    <a href="mailto:{{ $mail_data->gift_send_to }}"
-                                                                                                                        target="_blank">{{ $mail_data->gift_send_to }}</a>
+                                                                                                                    {{ $mail_data->gift_send_to }}
                                                                                                                     with
                                                                                                                     their
                                                                                                                     gift

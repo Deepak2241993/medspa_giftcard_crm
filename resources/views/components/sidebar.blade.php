@@ -78,12 +78,12 @@
                     {{-- end Dashboard --}}
 
                     {{--  For Patient --}}
-                    <li class="nav-header"><i class="fas fa-hospital-user fa-1x mr-2"></i> Patient Management </li>
+                    <li class="nav-header"> Patient Management </li>
                     <li class="nav-item">
                         <a href="#" class="nav-link">
-                            {{-- <i class="nav-icon fas fa-solid fa-gift"></i> --}}
+                            <i class="fas fa-hospital-user fa-1x mr-2"></i>
                             <p>
-                                Patient
+                                Patient Management
                                 <i class="fas fa-angle-left right"></i>
 
                             </p>
@@ -102,10 +102,10 @@
                         <hr>
                     </li>
                     {{--  For Manage --}}
-                    <li class="nav-header"><i class="fas fa-cart-arrow-down fa-1x mr-2"></i> Website Orders</li>
+                    <li class="nav-header">Orders</li>
                     <li class="nav-item">
                         <a href="#" class="nav-link">
-                           
+                           <i class="fas fa-cart-arrow-down fa-1x mr-2"></i>
                             <p>
                                 Orders
                                 <i class="fas fa-angle-left right"></i>
