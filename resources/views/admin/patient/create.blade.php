@@ -97,6 +97,7 @@
                                 <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">ProfileSettings</a></li>
                                 <li class="nav-item"><a class="nav-link" href="#giftcards" data-toggle="tab">Giftcards Orders</a></li>
                                 <li class="nav-item"><a class="nav-link" href="#services" data-toggle="tab">Services Orders</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#buysection" data-toggle="tab">Buy</a></li>
                             </ul>
                         </div><!-- /.card-header -->
                         <div class="card-body">
@@ -559,88 +560,97 @@
                                    {{-- For Services Orders  --}}
                                 <div class="tab-pane" id="services">
                                     <h4>Services Orders | <a href="{{route('service-redeem-patient-list',['id'=>$patient->id])}}" class="btn btn-primary">Redeem Services</a></h4>
-                                    <div class="col-12 col-sm-12">
-                                        <div class="card card-primary card-outline card-tabs">
-                                            <div class="card-header p-0 pt-1 border-bottom-0">
-                                              
-                                            <div class="card-body">
-                                                <div class="scroll-container">
-                                                    <div style="overflow: scroll">
-                                                        <div class="tab-content" id="custom-tabs-three-tabContent">
-                                                            <div class="tab-pane fade show active" id="custom-tabs-three-home"
-                                                                role="tabpanel" aria-labelledby="custom-tabs-three-received-tab">
-                                                                @if ($sevice_orders->count())
-                                                                    <table id="datatable-buttons"
-                                                                        class="table table-bordered table-striped">
-                                                                        <thead>
-                                                                        <tr>
-                                                                            <th>#</th>
-                                                                            <th>View Order</th>
-                                                                            <th>Invoice</th>
-                                                                            <th>Order Number</th>
-                                                                            <th>Full Name</th>
-                                                                            <th>Email</th>
-                                                                            <th>Phone</th>
-                                                                            <th>Transaction Amount</th>
-                                                                            <th>Transaction Id</th>
-                                                                            <th>Created Date & Time</th>
+                                        <div class="col-12 col-sm-12">
+                                            <div class="card card-primary card-outline card-tabs">
+                                                <div class="card-header p-0 pt-1 border-bottom-0">
+                                                    <div class="card-body">
+                                                        <div class="scroll-container">
+                                                            <div style="overflow: scroll">
+                                                                <div class="tab-content" id="custom-tabs-three-tabContent">
+                                                                    <div class="tab-pane fade show active" id="custom-tabs-three-home"
+                                                                        role="tabpanel" aria-labelledby="custom-tabs-three-received-tab">
+                                                                        @if ($sevice_orders->count())
+                                                                            <table id="datatable-buttons"
+                                                                                class="table table-bordered table-striped">
+                                                                                <thead>
+                                                                                <tr>
+                                                                                    <th>#</th>
+                                                                                    <th>View Order</th>
+                                                                                    <th>Invoice</th>
+                                                                                    <th>Order Number</th>
+                                                                                    <th>Full Name</th>
+                                                                                    <th>Email</th>
+                                                                                    <th>Phone</th>
+                                                                                    <th>Transaction Amount</th>
+                                                                                    <th>Transaction Id</th>
+                                                                                    <th>Created Date & Time</th>
 
-                                                                        </tr>
-                                                                        </thead>
-                                                                        <tbody id="data-table-body">
-                                                                            @foreach ($sevice_orders as $key => $value)
-                                                                            <tr>
-                                                                                <td>{{ $loop->iteration }}</td>
-                                                                                <td>  <a  class="btn btn-block btn-outline-primary"
-                                                                                    href="{{ route('service-invoice',$value->id) }}" class="btn btn-primary">Invoice Download</a>
-                                                                                    
-                                                                            </td>
-                                                                                
-                                                                                @if(!empty($value->payment_intent))
-                                                                                <td>
-                                                                                    <a type="button" class="btn btn-block btn-outline-dark"
-                                                                                        data-bs-toggle="modal" data-bs-target="#statement_view_{{ $value['id'] }}"
-                                                                                        onclick="StatementView({{ $key }},'{{ $value['order_id'] }}')">
-                                                                                        Statement
-                                                                                    </a>
-                                                                                </td>
-                                                                                @else
-                                                                                <td> <span class="badge bg-danger">No Payment</span></td>
-                                                                                @endif
-                                                                                <td>{{ $value->order_id }}</td>
-                                                                                <td>{{ $value->fname . ' ' . $value->lname }}</td>
-                                                                                <td>{{ $value->email }}</td>
-                                                                                <td>{{ $value->phone }}</td>
-                                                                                <td>{{ $value->final_amount }}</td>
-                                                                                <td>{{ $value->payment_intent }}</td>
-                                                                                <td>{{ date('m-d-Y h:i:m', strtotime($value->updated_at)) }}
-                                                                                </td>
+                                                                                </tr>
+                                                                                </thead>
+                                                                                <tbody id="data-table-body">
+                                                                                    @foreach ($sevice_orders as $key => $value)
+                                                                                    <tr>
+                                                                                        <td>{{ $loop->iteration }}</td>
+                                                                                        <td>  <a  class="btn btn-block btn-outline-primary"
+                                                                                            href="{{ route('service-invoice',$value->id) }}" class="btn btn-primary">Invoice Download</a>
+                                                                                            
+                                                                                    </td>
+                                                                                        
+                                                                                        @if(!empty($value->payment_intent))
+                                                                                        <td>
+                                                                                            <a type="button" class="btn btn-block btn-outline-dark"
+                                                                                                data-bs-toggle="modal" data-bs-target="#statement_view_{{ $value['id'] }}"
+                                                                                                onclick="StatementView({{ $key }},'{{ $value['order_id'] }}')">
+                                                                                                Statement
+                                                                                            </a>
+                                                                                        </td>
+                                                                                        @else
+                                                                                        <td> <span class="badge bg-danger">No Payment</span></td>
+                                                                                        @endif
+                                                                                        <td>{{ $value->order_id }}</td>
+                                                                                        <td>{{ $value->fname . ' ' . $value->lname }}</td>
+                                                                                        <td>{{ $value->email }}</td>
+                                                                                        <td>{{ $value->phone }}</td>
+                                                                                        <td>{{ $value->final_amount }}</td>
+                                                                                        <td>{{ $value->payment_intent }}</td>
+                                                                                        <td>{{ date('m-d-Y h:i:m', strtotime($value->updated_at)) }}
+                                                                                        </td>
 
-                                                                            </tr>
-                                                                        @endforeach
-                                                                            <br>
+                                                                                    </tr>
+                                                                                @endforeach
+                                                                                    <br>
+                                                                                    {{ $sevice_orders->links() }}
+                                                                                </tbody>
+                                                                            </table>
                                                                             {{ $sevice_orders->links() }}
-                                                                        </tbody>
-                                                                    </table>
-                                                                    {{ $sevice_orders->links() }}
-                                                                @else
-                                                                    <hr>
-                                                                    <p> No data found</p>
-                                                                @endif
+                                                                        @else
+                                                                            <hr>
+                                                                            <p> No data found</p>
+                                                                        @endif
+                                                                    </div>
+                                                                    
+                                                                </div>
                                                             </div>
-                                                            
+                                                            <!-- /.card -->
                                                         </div>
                                                     </div>
-                                                    <!-- /.card -->
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
                                 </div>
-
-
-                                <!-- /.tab-pane -->
-                            </div>
+                                   {{-- For Buy  --}}
+                                <div class="tab-pane" id="buysection">
+                                    <h4>Buy </h4>
+                                        <div class="col-12 col-sm-12">
+                                            <div class="card card-primary card-outline card-tabs">
+                                                <div class="card-header p-0 pt-1 border-bottom-0">
+                                                   <a href="{{route('giftcards-sale',['id'=>$patient->id])}}" class="btn btn-primary">Giftcard Buy</a>
+                                                   {{-- <a href="{{route('#',['id'=>$patient->id])}}" class="btn btn-primary">Service & Deals Sale</a> --}}
+                                                   <a href="{{route('program-sale',['id'=>$patient->id])}}" class="btn btn-primary">Program Sale</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                </div>
                             <!-- /.tab-content -->
                         </div><!-- /.card-body -->
                     </div>

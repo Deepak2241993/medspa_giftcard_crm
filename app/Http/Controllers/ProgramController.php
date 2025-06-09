@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Patient;
 use App\Models\Program;
 use App\Models\ServiceUnit;
 use Illuminate\Http\Request;
@@ -21,6 +22,16 @@ class ProgramController extends Controller
         ->get();
     
         return view('admin.program.index', compact('data'));
+
+    }
+
+     public function PatientProgramBuy(Request $request, $id)
+    {
+        $data = Program::
+        where('status', 1)
+        ->where('is_deleted', 0)
+        ->get();
+        return view('admin.program.index', compact('data','id'));
 
     }
 

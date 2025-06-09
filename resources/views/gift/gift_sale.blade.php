@@ -457,7 +457,7 @@
                                                 <div class="mb-3 col-lg-6 self">
                                                     <label for="your_name" class="form-label">Sender Name<span
                                                             class="text-danger">*</span></label>
-                                                    <input class="form-control" type="text" name="your_name" value=""
+                                                <input class="form-control" type="text" name="your_name" value="{{ $patient->fname ?? '' }} {{ $patient->lname ?? '' }}"
                                                         placeholder="From Name" id="your_name" autocomplete="off">
                                                     <span id="your_name_error" class="text-danger"></span>
                                                 </div>
@@ -465,7 +465,7 @@
                                                     <label for="receipt_email" class="form-label"><b>Sender Email<span
                                                                 class="text-danger">*</span></b></label>
                                                     <input class="form-control" type="email" name="receipt_email"
-                                                        value=""
+                                                        value="{{$patient->email ?? ''}}"
                                                         placeholder="Sender's Email address (for the receipt)"
                                                         id="receipt_email" autocomplete="off">
                                                     <span id="receipt_email_error" class="text-danger"></span>
@@ -674,7 +674,7 @@
                                                         <label for="syour_name" class="form-label">Your Name<span
                                                                 class="text-danger">*</span></label>
                                                         <input class="form-control" type="text" name="your_name"
-                                                            value="" placeholder="From Name" id="syour_name"
+                                                            value="{{ $patient->fname ?? '' }} {{ $patient->lname ?? '' }}" placeholder="From Name" id="syour_name"
                                                             autocomplete="off">
                                                         <span id="syour_name_error" class="text-danger"></span>
                                                     </div>
@@ -683,7 +683,7 @@
                                                                 should we send the gift card to?<span
                                                                     class="text-danger">*</span></b></label>
                                                         <input class="form-control" type="email" name="gift_send_to"
-                                                            value="" placeholder="Enter Your Email" id="sto_email"
+                                                            value="{{$patient->email ?? ''}}" placeholder="Enter Your Email" id="sto_email"
                                                             autocomplete="off">
                                                         <span id="sgift_send_to_error" class="text-danger"></span>
                                                     </div>

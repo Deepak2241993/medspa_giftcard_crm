@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Program;
 use App\Models\ServiceUnit;
+use App\Models\Giftsend;
 use App\Models\TransactionHistory;
 use Illuminate\Support\Facades\Auth;
 use Session;
@@ -17,6 +18,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use App\Models\GiftcardsNumbers;
+use App\Models\Patient;
+
 class PopularOfferController extends Controller
 {
     protected $transactionHistoryController;
@@ -178,6 +181,11 @@ class PopularOfferController extends Controller
     
         // Save the updated cart back to the session
         session()->put('cart', $cart);
+        // Put Patient Id In Session For Buyinf from patient Page
+       // Store patient_id in session
+    if ($request->has('patient_id')) {
+        session()->put('patient_id', $request->patient_id);
+    }
         return response()->json([
             'status'  => '200',
             'success' => 'Item added to cart successfully!',
@@ -238,6 +246,61 @@ public function updateCart(Request $request)
     }
 
     public function AdminCartview(Request $request){
+         if (Session::has('patient_id')) {
+        $patient_id = Session::get('patient_id');
+        try {
+            $patient = Patient::findOrFail($patient_id);
+
+             // Get giftcards related to the patient
+        $mygiftcards = Giftsend::where(function($query) use ($patient) {
+                $query->whereColumn('gift_send_to', 'receipt_email')
+                      ->whereNull('recipient_name')
+                      ->where('gift_send_to', $patient->patient_login_id);
+            })
+            ->orWhere(function($query) use ($patient) {
+                $query->whereColumn('gift_send_to', '!=', 'receipt_email')
+                      ->whereNotNull('recipient_name')
+                      ->where('gift_send_to', $patient->patient_login_id);
+            })
+            ->orderBy('id', 'DESC')
+            ->get();
+    
+        $formattedGiftcards = [];
+    
+        foreach ($mygiftcards as $value) {
+            $giftcards = GiftcardsNumbers::where('transaction_id', $value->transaction_id)
+                ->pluck('giftnumber')->toArray();
+    
+            if (!empty($giftcards)) {
+                $final_results = GiftcardsNumbers::select(
+                        'giftnumber as card_number',
+                        DB::raw('SUM(actual_paid_amount) as total_paid_amount'),
+                        DB::raw('SUM(amount) as total_value_amount')
+                    )
+                    ->whereIn('giftnumber', $giftcards)
+                    ->where('user_token', 'FOREVER-MEDSPA')
+                    ->where('status', 1)
+                    ->groupBy('giftnumber')
+                    ->get();
+    
+                foreach ($final_results as $result) {
+                    $formattedGiftcards[$result->card_number] = [
+                        'card_number' => $result->card_number,
+                        'value_amount' => $result->total_value_amount,
+                        'actual_paid_amount' => $result->total_paid_amount ?? 'N/A',
+                    ];
+                }
+            }
+        }
+    
+        // Convert associative to indexed array
+        $giftcards = array_values($formattedGiftcards);
+        // GiftcardData End
+            return view('admin.cart.cart', compact('patient','giftcards'));
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return redirect()->back()->with('error', 'Patient not found.');
+        }
+    }
         return view('admin.cart.cart');
     }
     //  For Items Remove From Carts

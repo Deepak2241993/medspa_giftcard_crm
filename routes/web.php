@@ -109,7 +109,7 @@ Route::get('/giftcardredeem-from-patientlist/{id}','GiftsendController@giftcardr
 Route::get('/giftcardsearch','GiftsendController@GiftCardSearch')->name('giftcard-search');
 Route::post('/giftcardredeem','GiftsendController@giftcardredeem')->name('giftcardredeem');
 Route::post('/giftcardstatment','GiftsendController@giftcardstatment')->name('giftcardstatment');
-Route::get('/giftcards-sale', 'GiftsendController@giftsale')->name('giftcards-sale');
+Route::get('/giftcards-sale/{id?}', 'GiftsendController@giftsale')->name('giftcards-sale');
 Route::post('/giftcancel','GiftsendController@giftcancel')->name('giftcancel');
 Route::resource('/category', ProductCategoryController::class);
 Route::resource('/product', ProductController::class);
@@ -152,6 +152,7 @@ Route::get('/invoice/{transaction_data}', 'PopularOfferController@invoice')->nam
 Route::get('/giftcards-statement-admin-view/{id}', 'PatientController@GiftcardsStatementAdminView')->name('giftcards-statement-admin-view');
 Route::resource('/terms', TermController::class);
 Route::resource('/program', ProgramController::class);
+Route::Get('/program-sale/{id}', 'ProgramController@PatientProgramBuy')->name('program-sale');
 Route::resource('/product', ProductController::class);
 Route::resource('/patient', PatientController::class);
 

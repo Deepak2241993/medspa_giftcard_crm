@@ -452,6 +452,7 @@
                                 <div id="patient-information" class="content" role="tabpanel"
                                     aria-labelledby="patient-information-trigger">
                                     <div class="form-group">
+                                      @if(!isset($patient))
                                         <h5>Search Patient by Email</h5>
                                         <div class="row mt-4 mb-4">
                                             <div class="col-md-6">
@@ -464,23 +465,25 @@
                                                     class="btn btn-block btn-outline-success">Search</Button>
                                             </div>
                                         </div>
+                                        @endif
+                                        <h5>Patient Details</h5>
                                         <div class="row mb-4">
                                             <div class="mt-4 col-md-3">
-                                                <input type="text" class="form-control" value="" id="fname" name="fname"
+                                                <input type="text" class="form-control" value="{{$patient->fname??''}}" id="fname" name="fname"
                                                     Placeholder="First Name">
                                                 <input type="hidden" class="form-control" value="0" id="patient_id" name="patient_id"
                                                 Placeholder="id">
                                             </div>
                                             <div class="mt-4 col-md-3">
-                                                <input type="text" class="form-control" value="" id="lname" name="lname"
+                                                <input type="text" class="form-control" value="{{$patient->lname??''}}" id="lname" name="lname"
                                                     Placeholder="Last Name">
                                             </div>
                                             <div class="mt-4 col-md-3">
-                                                <input type="email" class="form-control" value="" id="email" name="email"
+                                                <input type="email" class="form-control" value="{{$patient->email??''}}" id="email" name="email"
                                                     Placeholder="Email">
                                             </div>
                                             <div class="mt-4 col-md-3">
-                                                <input type="text" class="form-control" value="" id="phone" name="phone"
+                                                <input type="text" class="form-control" value="{{$patient->phone??''}}" id="phone" name="phone"
                                                     Placeholder="Phone">
                                             </div>
                                         </div>
@@ -498,7 +501,25 @@
                                                 </tr>
                                             </thead>
                                             <tbody id="giftcards-container">
-                                                <!-- Dynamic Data Will be Appended Here -->
+                                                @if(isset($giftcards))
+                                               @forelse($giftcards as $index => $card)
+                                                <tr>
+                                                    <td>{{ $index + 1 }}</td>
+                                                    <td>{{ $card['card_number'] }}</td>
+                                                    <td>${{ number_format($card['value_amount'], 2) }}</td>
+                                                    <td>${{ number_format($card['actual_paid_amount'], 2) }}</td>
+                                                    <td>
+                                                        @if($card['value_amount'] != 0)
+                                                            <button class="btn btn-warning" onclick="addGiftCardRow('{{ $card['card_number'] }}', '{{ $card['value_amount'] }}')">Use</button>
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                            @empty
+                                                <tr>
+                                                    <td colspan="5" class="text-center text-muted">No gift cards found.</td>
+                                                </tr>
+                                            @endforelse
+                                            @endif
                                             </tbody>
                                         </table>
                                         {{-- Giftcard Add Section --}}
@@ -619,6 +640,9 @@
 @push('script')
     <!-- jQuery and jQuery UI -->
 
+
+
+
     <script>
         //  Create Slug 
         function slugCreate() {
@@ -667,6 +691,7 @@
         }
 
     //  For Data Featch From Patient Table
+  
     function findPatientData() {
     $.ajax({
         url: '{{ route('patient-data') }}', // Laravel route

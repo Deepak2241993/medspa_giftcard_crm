@@ -424,9 +424,16 @@ else{
         return $result;
     }
 
-    public function giftsale(){
-        return view('gift.gift_sale');
-    } 
+   public function giftsale(Request $request, $id = null)
+{
+    $patient = null;
+
+    if ($id) {
+        $patient = Patient::findOrFail($id);
+    }
+
+    return view('gift.gift_sale', compact('patient'));
+}
 
      // For Other Giftcards
 

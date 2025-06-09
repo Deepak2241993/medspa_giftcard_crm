@@ -679,6 +679,7 @@ public function invoice()
                 }
 
                 session()->forget('cart'); // Clear cart session
+                session()->forget('patient_id'); // Clear cart session
                 DB::commit(); // Commit transaction
 
                 return response()->json([

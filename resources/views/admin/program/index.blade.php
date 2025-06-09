@@ -69,7 +69,15 @@
                                 <tr>
                                     <td>{{$loop->iteration}}</td>
                                     <td>
+                                        @if(isset($id))
+                                            <a class="btn btn-block btn-outline-warning" onclick="addcart({{ $value['id'] }}, {{ $id }})">Buy</a>
+                                        @else
                                         <a class="btn btn-block btn-outline-warning" onclick="addcart({{ $value['id'] }})">Buy</a>
+                                        @endif
+
+                                        @if(!@isset($id))
+                                            
+                                        
                                         <a href="{{route('program.edit',$value->id)}}"
                                              class="btn btn-block btn-outline-primary mb-2">Edit</a>
                                         <form
@@ -80,6 +88,7 @@
                                               @csrf
                                             <button  class="btn btn-block btn-outline-danger" type="submit">Delete</button>
                                         </form>
+                                        @endisset
                                     </td>
                                     <td>{{$value->program_name}}</td>
                                     <td>
@@ -133,7 +142,7 @@
 
 @push('script')
 <script>
-    function addcart(id) {
+    function addcart(id,patient_id) {
         $.ajax({
             url: '{{ route('cart') }}',
             method: "post",
@@ -141,6 +150,7 @@
             data: {
                 _token: '{{ csrf_token() }}',
                 program_id: id,
+                patient_id: patient_id,
                 quantity: 1,
                 type: "program"
             },
