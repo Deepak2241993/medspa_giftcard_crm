@@ -141,7 +141,12 @@
                     @foreach ($products as $value)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
-                            <td><a class="btn btn-block btn-outline-primary" onclick="addcart({{ $value['id'] }})">Buy</a>
+                            <td>
+                                @if(isset($id))
+                                <a class="btn btn-block btn-outline-primary" onclick="addcart({{ $value['id'] }}, {{ $id }})">Buy</a>
+                                @else
+                                <a class="btn btn-block btn-outline-primary" onclick="addcart({{ $value['id'] }})">Buy</a>
+                                @endif
                             </td>
                             <td>{{ $value['product_name'] ? $value['product_name'] : 'NULL' }}
                             </td>
@@ -336,7 +341,7 @@
         }
     </script>
     <script>
-        function addcart(id) {
+        function addcart(id,patient_id) {
             $.ajax({
                 url: '{{ route('cart') }}',
                 method: "post",
@@ -344,6 +349,7 @@
                 data: {
                     _token: '{{ csrf_token() }}',
                     product_id: id,
+                    patient_id: patient_id,
                     quantity: 1,
                     type: "product"
                 },

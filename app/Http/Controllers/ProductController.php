@@ -22,27 +22,49 @@ class ProductController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request, Product $product)
-{
-    $token = Auth::user()->user_token;
+    {
+        $token = Auth::user()->user_token;
 
-    // Prepare data for API request
-    $data_arr = [
-        'user_token' => $token,
-        'service_name' => $request->input('service_name'),
-        'product_slug' => $request->input('product_slug')
-    ];
+        // Prepare data for API request
+        $data_arr = [
+            'user_token' => $token,
+            'service_name' => $request->input('service_name'),
+            'product_slug' => $request->input('product_slug')
+        ];
 
-    $data = json_encode($data_arr);
+        $data = json_encode($data_arr);
 
-    // Make API request
-    $apiResponse = $this->postAPI('product-list', $data);
-    $products = $apiResponse['result']; // Array of products
+        // Make API request
+        $apiResponse = $this->postAPI('product-list', $data);
+        $products = $apiResponse['result']; // Array of products
 
-    // Image Show
-    $images = Storage::files('public/images');
+        // Image Show
+        $images = Storage::files('public/images');
 
-    return view('admin.product.product_index', compact('products', 'images'));
-}
+        return view('admin.product.product_index', compact('products', 'images'));
+    }
+    public function ServiceBuyFromPatientPage(Request $request, Product $product,$id)
+    {
+        $token = Auth::user()->user_token;
+
+        // Prepare data for API request
+        $data_arr = [
+            'user_token' => $token,
+            'service_name' => $request->input('service_name'),
+            'product_slug' => $request->input('product_slug')
+        ];
+
+        $data = json_encode($data_arr);
+
+        // Make API request
+        $apiResponse = $this->postAPI('product-list', $data);
+        $products = $apiResponse['result']; // Array of products
+
+        // Image Show
+        $images = Storage::files('public/images');
+
+        return view('admin.product.product_index', compact('products', 'images','id'));
+    }
 
 
     /**

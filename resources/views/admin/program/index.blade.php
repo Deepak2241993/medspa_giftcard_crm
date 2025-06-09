@@ -64,13 +64,13 @@
                             </thead>
                             <tbody>
                                 
-                                @if(count($data)>0)
+                                @if(count($data)>0)addcart
                                 @foreach($data as $value)
                                 <tr>
                                     <td>{{$loop->iteration}}</td>
                                     <td>
                                         @if(isset($id))
-                                            <a class="btn btn-block btn-outline-warning" onclick="addcart({{ $value['id'] }}, {{ $id }})">Buy</a>
+                                            <a class="btn btn-block btn-outline-warning" onclick="({{ $value['id'] }}, {{ $id }})">Buy</a>
                                         @else
                                         <a class="btn btn-block btn-outline-warning" onclick="addcart({{ $value['id'] }})">Buy</a>
                                         @endif
