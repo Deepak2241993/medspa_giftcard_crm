@@ -46,10 +46,13 @@
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 @stack('css')
 </head>
-<body class="hold-transition sidebar-mini">
+{{-- <body class="hold-transition sidebar-mini"> --}}
+<body class="hold-transition sidebar-collapse layout-top-nav">
+  
 <div class="wrapper">
   <!-- Navbar -->
-    <x-topbar/>
+    {{-- <x-topbar/> --}}
+    <x-admin_topbar/>
   <!-- /.navbar -->
 
     <!-- Main Sidebar Container -->
