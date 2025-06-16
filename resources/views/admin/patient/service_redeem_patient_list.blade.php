@@ -24,18 +24,23 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h3 class="mb-0">Service List - {{ucFirst($fullname)}}</h3>
+                    <h3 class="mb-0">Service List - {{$patient->fname??''}} {{$patient->lname??''}}</h3>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#">Orders</a></li>
                         <li class="breadcrumb-item active" aria-current="page">
-                            Service List - {{ucFirst($fullname)}}
+                            Service List - {{$patient->fname??''}} {{$patient->lname??''}}
                         </li>
                     </ol>
                 </div>
             </div>
         </div><!-- /.container-fluid -->
+         <h4><u>Patient Information</u></h4>
+        <p>Name:  {{$patient->fname??''}} {{$patient->lname??''}} <br>Email:  {{$patient->email??''}} <br> Phone:  {{$patient->phone??''}}<br> UserName: {{$patient->patient_login_id??''}}
+        </p>
+        <a href="{{route('patient.index')}}"class="btn btn-primary">Go to Patient List</a>
+        <a href="{{route('patient.edit',$patient->id)}}"class="btn btn-dark">Go to Profile</a>
     </section>
     <section class="content-header">
 
@@ -54,9 +59,9 @@
                             <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="#">#</th>
                             <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="View Order">View Order</th>
                             <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Order Number">Order Number</th>
-                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Full Name">Full Name</th>
+                            {{-- <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Full Name">Full Name</th>
                             <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Email">Email</th>
-                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Phone">Phone</th>
+                            <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Phone">Phone</th> --}}
                             <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Transaction Amount">Transaction Amount</th>
                             <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Transaction Id">Transaction Id</th>
                             <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Created Date & Time">Created Date & Time</th>
@@ -103,9 +108,9 @@
                                 <td> <span class="badge bg-danger">No Payment</span></td>
                                 @endif
                                 <td>{{ $value->order_id }}</td>
-                                <td>{{ $value->fname . ' ' . $value->lname }}</td>
+                                {{-- <td>{{ $value->fname . ' ' . $value->lname }}</td>
                                 <td>{{ $value->email }}</td>
-                                <td>{{ $value->phone }}</td>
+                                <td>{{ $value->phone }}</td> --}}
                                 <td>{{ $value->final_amount }}</td>
                                 <td>{{ $value->payment_intent }}</td>
                                 <td>{{ $value->updated_at ? $value->updated_at->format('m-d-Y') : '' }}

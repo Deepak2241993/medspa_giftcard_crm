@@ -340,7 +340,7 @@ else{
         $getdata = json_decode(json_encode($getdata), true); // array of arrays
 
     // Return view with data
-    return view('admin.patient.patientlist-redeem_view', compact('getdata','patient_full_name'));
+    return view('admin.patient.patientlist-redeem_view', compact('getdata','patient'));
 }
 
 

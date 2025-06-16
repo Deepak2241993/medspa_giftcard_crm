@@ -5,17 +5,22 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-            <h3 class="mb-0">Giftcard List of {{$patient_full_name}}</h3>
+            <h3 class="mb-0">Giftcards of {{$patient->fname??''}} {{$patient->lname??''}}</h3>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                 <li class="breadcrumb-item"><a href="{{url('admin-dashboard')}}">Home</a></li>
                         <li class="breadcrumb-item active" aria-current="page">
-                            Giftcard List of {{$patient_full_name}}
+                            Giftcard List of {{$patient->fname??''}} {{$patient->lname??''}}
                         </li>
                 </ol>
             </div>
         </div>
+        <h4><u>Patient Information</u></h4>
+        <p>Name:  {{$patient->fname??''}} {{$patient->lname??''}} <br>Email:  {{$patient->email??''}} <br> Phone:  {{$patient->phone??''}}<br> UserName: {{$patient->patient_login_id??''}}
+        </p>
+        <a href="{{route('patient.index')}}"class="btn btn-primary">Go to Patient List</a>
+        <a href="{{route('patient.edit',$patient->id)}}"class="btn btn-dark">Go to Profile</a>
     </div><!-- /.container-fluid -->
 </section>
 <section class="content-header">
@@ -30,24 +35,19 @@
                 <thead>
                     <tr>
                         <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending" aria-label="#: activate to sort column descending">#</th>
-                        <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending"aria-label="Gift Card Holder Name">Gift Card Holder Name</th>
-                        <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending"aria-label="User Name">User Name </th>
-                        <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending"aria-label="Gift Card Number">Gift Card Number</th>
-                        <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending"aria-label="Gift Card Amount">Gift Card Amount</th>
-                        <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending"aria-label="Gift Card Status">Gift Card Status</th>
-                        {{-- <th>Created Time</th> --}}
                         <th>Action</th>
+                        <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending"aria-label="Gift Card Number">Gift Card Number</th>
+                        {{-- <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending"aria-label="Gift Card Holder Name">Gift Card Holder Name</th> --}}
+                        {{-- <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending"aria-label="User Name">User Name </th> --}}
+                        <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending"aria-label="Gift Card Amount">Gift Card Amount</th>
+                        {{-- <th class="sorting sorting_asc" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-sort="ascending"aria-label="Gift Card Status">Gift Card Status</th> --}}
+                        {{-- <th>Created Time</th> --}}
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($getdata as $key=>$value)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                        <td>{{ $value['recipient_name'] ? $value['recipient_name']:$value['your_name'] }}</td>
-                        <td>{{ $value['gift_send_to'] }}</td>
-                        <td>{{ $value['giftnumber'] }}</td>
-                        <td>{{ '$'.$value['total_amount'] }}</td>
-                        <td>{!! $value['status']!=0?'<span class="badge text-bg-success">Active</span>':'<span class="badge text-bg-danger">Inactive</span>' !!}</td>
                         <td class="text-center">
                             @if($value['status'] != 0 && $value['total_amount'] != 0)
                                 <a type="button" 
@@ -78,6 +78,12 @@
                                 <i class="fa fa-history"></i>
                             </a>
                         </td>
+                        {{-- <td>{{ $value['recipient_name'] ? $value['recipient_name']:$value['your_name'] }}</td>
+                        <td>{{ $value['gift_send_to'] }}</td> --}}
+                        <td>{{ $value['giftnumber'] }}</td>
+                        <td>{{ '$'.$value['total_amount'] }}</td>
+                        {{-- <td>{!! $value['status']!=0?'<span class="badge text-bg-success">Active</span>':'<span class="badge text-bg-danger">Inactive</span>' !!}</td> --}}
+                        
 
                         <!-- Button trigger modal -->
                     </tr>

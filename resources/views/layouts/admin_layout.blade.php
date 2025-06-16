@@ -31,6 +31,8 @@
    <link rel="stylesheet" href="{{url('/')}}/plugins/dropzone/min/dropzone.min.css">
    <!-- Theme style -->
    <link rel="stylesheet" href="{{url('/')}}/dist/css/adminlte.min.css">
+    <!-- IonIcons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
   {{-- For Sweet Alert --}}
   <link rel="stylesheet" href="{{url('/')}}/plugins/summernote/summernote-bs4.min.css">
      <!-- DataTables -->
@@ -58,7 +60,7 @@
     <!-- Main Sidebar Container -->
        <x-sidebar/>
     <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper" style="overflow-x: auto; overflow-y: auto; max-height: 100vh; max-width: 100%;">
+    <div class="container content-wrapper" style="overflow-x: auto; overflow-y: auto; max-height: 100vh; max-width: 100%;">
  
          @yield('body')
     </div>

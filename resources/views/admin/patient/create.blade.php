@@ -93,19 +93,21 @@
                     <div class="card">
                         <div class="card-header p-2">
                             <ul class="nav nav-pills">
-                                <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Activity Timeline</a></li>
-                                <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">ProfileSettings</a></li>
+                                {{-- <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Activity Timeline</a></li> --}}
+                                <li class="nav-item"><a class="nav-link active" href="#settings" data-toggle="tab">Profile Settings</a></li>
                                 <li class="nav-item"><a class="nav-link" href="#giftcards" data-toggle="tab">Giftcards Orders</a></li>
                                 <li class="nav-item"><a class="nav-link" href="#services" data-toggle="tab">Services Orders</a></li>
                                 <li class="nav-item"><a class="nav-link" href="#buysection" data-toggle="tab">Buy</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{{route('giftcardredeemPatientList',['id'=>$patient->id])}}">Giftcard Redeem</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{{route('service-redeem-patient-list',['id'=>$patient->id])}}">Service Redeem</a></li>
                             </ul>
                         </div><!-- /.card-header -->
                         <div class="card-body">
                             <div class="tab-content">
 
-                                <div class="active tab-pane" id="activity">
+                                {{-- <div class="active tab-pane" id="activity">
                                     <h4 class="mb-4">Time Line</h4>
-                                    {{-- For Search --}}
+                                    
                                     <div class="mb-3">
                                         <form method="GET" action="">
                                             <div class="row align-items-end g-2">
@@ -135,10 +137,7 @@
                                             </div>
                                         </form>
                                     </div>
-
-
-
-                                    {{-- Search Line Time --}}
+                                    
                                     <!-- Post -->
                                     <div class="timeline timeline-inverse">
                                         @if ($timeline)
@@ -221,10 +220,10 @@
                                         </div>
                                     </div>
                                     <!-- /.post -->
-                                </div>
+                                </div> --}}
 
                                 {{-- For Settings --}}
-                                <div class="tab-pane" id="settings">
+                                <div class="active tab-pane" id="settings">
                                     <h4 class="mb-4">Profile Settings</h4>
                                     <form class="form-horizontal" method="post"
                                         action="{{ route('patient.update', $patient->id) }}" novalidate="novalidate"
@@ -309,7 +308,7 @@
 
                                 {{-- For Orders  --}}
                                 <div class="tab-pane" id="giftcards">
-                                    <h4>Giftcards Orders | <a href="{{route('giftcardredeemPatientList',['id'=>$patient->id])}}" class="btn btn-primary">Redeem Giftcards</a></h4>
+                                    <h4>Giftcards Orders </h4>
                                     <div class="col-12 col-sm-12">
                                         <div class="card card-primary card-outline card-tabs">
                                             <div class="card-header p-0 pt-1 border-bottom-0">
@@ -559,7 +558,7 @@
 
                                    {{-- For Services Orders  --}}
                                 <div class="tab-pane" id="services">
-                                    <h4>Services Orders | <a href="{{route('service-redeem-patient-list',['id'=>$patient->id])}}" class="btn btn-primary">Redeem Services</a></h4>
+                                    <h4>Services Orders </h4>
                                         <div class="col-12 col-sm-12">
                                             <div class="card card-primary card-outline card-tabs">
                                                 <div class="card-header p-0 pt-1 border-bottom-0">

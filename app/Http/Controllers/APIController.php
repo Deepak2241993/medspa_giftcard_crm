@@ -17,11 +17,13 @@ use App\Mail\GiftReceipt;
 use Auth;
 use Mail;
 use Session;
-use Validator;
 use Illuminate\Support\Facades\Log;
 use App\Events\TimelineGiftcardRedeem;
 use App\Events\TimelineGiftcardCancel;
 use DB;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class APIController extends Controller
 {
@@ -2268,6 +2270,107 @@ public function product_view(Request $request, $id)
             'error' => 'Order Details Not Found',
             'status' => 404,
         ], 404);
+    }
+}
+
+// Create Patient
+/**
+ * Create a new patient.
+ *
+ * @OA\Post(
+ *     path="/add-patient",
+ *     tags={"Patient"},
+ *     summary="Create a new patient",
+ *     operationId="createPatient",
+ *     @OA\Parameter(
+ *         name="user_token",
+ *         in="query",
+ *         required=true,
+ *         description="API user token for authorization",
+ *         @OA\Schema(type="string", example="FOREVER-MEDSPA")
+ *     ),
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\MediaType(
+ *             mediaType="multipart/form-data",
+ *             @OA\Schema(
+ *                 required={"fname", "lname", "email", "phone"},
+ *                 @OA\Property(property="fname", type="string", example="Mohan"),
+ *                 @OA\Property(property="lname", type="string", example="Sharma"),
+ *                 @OA\Property(property="email", type="string", format="email", example="mohan123@gmail.com"),
+ *                 @OA\Property(property="phone", type="string", example="9876543210"),
+ *                 @OA\Property(property="password", type="string", format="password", example="Secret@123"),
+ *                 @OA\Property(property="image", type="string", format="binary"),
+ *                 @OA\Property(property="user_name", type="string", example="Mohan@123"),
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(response=200, description="Patient created successfully"),
+ *     @OA\Response(response=400, description="Bad request or validation error"),
+ *     @OA\Response(response=401, description="Unauthorized"),
+ *     @OA\Response(response=500, description="Internal server error")
+ * )
+ */
+
+
+
+ public function CreatePatient(Request $request)
+{
+    // Map `user_name` from frontend to `patient_login_id` for backend
+    $request->merge([
+        'patient_login_id' => $request->input('user_name')
+    ]);
+
+    // Validate input
+    $validator = Validator::make($request->all(), [
+        'patient_login_id' => 'required|string|unique:patients,patient_login_id',
+        'fname' => 'required|string|max:100',
+        'lname' => 'required|string|max:100',
+        'email' => 'required|email|unique:patients,email',
+        'phone' => 'required|string|max:15',
+        'password' => 'nullable|string|min:6',
+        'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        'user_token' => 'required|string'
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json([
+            'status' => false,
+            'message' => 'Validation failed',
+            'errors' => $validator->errors()
+        ], 400);
+    }
+
+    try {
+        // Collect all validated fields
+        $data = $request->only(['patient_login_id', 'fname', 'lname', 'email', 'phone']);
+
+        // Add hashed password if present
+        if ($request->filled('password')) {
+            $data['password'] = Hash::make($request->password);
+        }
+
+        // Upload image
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('public/patient_images');
+            $data['image'] = url(Storage::url($imagePath));
+        }
+
+        // Create patient
+        $patient = Patient::create($data);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Patient created successfully',
+            'data' => $patient
+        ], 200);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => false,
+            'message' => 'Internal server error',
+            'error' => $e->getMessage()
+        ], 500);
     }
 }
 

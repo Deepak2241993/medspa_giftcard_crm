@@ -65,5 +65,8 @@ Route::post('/productDelete/{id}','APIController@productDelete')->name('productD
 
 //  For Orders Search
 Route::post('/order-search','APIController@OrderSearch')->name('order-search');
-Route::post('deals-search','APIController@DealsSearch')->name('deals-search');
+
+
+// For Patient
+Route::post('add-patient','APIController@CreatePatient')->name('add-patient');
 
