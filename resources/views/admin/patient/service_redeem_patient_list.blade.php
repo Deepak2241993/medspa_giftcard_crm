@@ -107,7 +107,7 @@
                                 @else
                                 <td> <span class="badge bg-danger">No Payment</span></td>
                                 @endif
-                                <td>{{ $value->order_id }}</td>
+                                <td><a href="{{ route('service-invoice',$value->id) }}">{{ $value->order_id }}</a></td>
                                 {{-- <td>{{ $value->fname . ' ' . $value->lname }}</td>
                                 <td>{{ $value->email }}</td>
                                 <td>{{ $value->phone }}</td> --}}

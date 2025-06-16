@@ -96,7 +96,7 @@
                                 {{-- <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Activity Timeline</a></li> --}}
                                 <li class="nav-item"><a class="nav-link active" href="#settings" data-toggle="tab">Profile Settings</a></li>
                                 <li class="nav-item"><a class="nav-link" href="#giftcards" data-toggle="tab">Giftcards Orders</a></li>
-                                <li class="nav-item"><a class="nav-link" href="#services" data-toggle="tab">Services Orders</a></li>
+                                {{-- <li class="nav-item"><a class="nav-link" href="#services" data-toggle="tab">Services Orders</a></li> --}}
                                 <li class="nav-item"><a class="nav-link" href="#buysection" data-toggle="tab">Buy</a></li>
                                 <li class="nav-item"><a class="nav-link" href="{{route('giftcardredeemPatientList',['id'=>$patient->id])}}">Giftcard Redeem</a></li>
                                 <li class="nav-item"><a class="nav-link" href="{{route('service-redeem-patient-list',['id'=>$patient->id])}}">Service Redeem</a></li>
@@ -557,7 +557,7 @@
                                 </div>
 
                                    {{-- For Services Orders  --}}
-                                <div class="tab-pane" id="services">
+                                {{-- <div class="tab-pane" id="services">
                                     <h4>Services Orders </h4>
                                         <div class="col-12 col-sm-12">
                                             <div class="card card-primary card-outline card-tabs">
@@ -636,7 +636,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                </div>
+                                </div> --}}
                                    {{-- For Buy  --}}
                                 <div class="tab-pane" id="buysection">
                                     <h4>Buy </h4>
