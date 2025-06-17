@@ -2298,10 +2298,7 @@ public function product_view(Request $request, $id)
  *                 @OA\Property(property="fname", type="string", example="Mohan"),
  *                 @OA\Property(property="lname", type="string", example="Sharma"),
  *                 @OA\Property(property="email", type="string", format="email", example="mohan123@gmail.com"),
- *                 @OA\Property(property="phone", type="string", example="9876543210"),
- *                 @OA\Property(property="password", type="string", format="password", example="Secret@123"),
- *                 @OA\Property(property="image", type="string", format="binary"),
- *                 @OA\Property(property="user_name", type="string", example="Mohan@123"),
+ *                @OA\Property(property="phone", type="string", example="9876543210"),
  *             )
  *         )
  *     ),
@@ -2323,14 +2320,14 @@ public function product_view(Request $request, $id)
 
     // Validate input
     $validator = Validator::make($request->all(), [
-        'patient_login_id' => 'required|string|unique:patients,patient_login_id',
+        // 'patient_login_id' => 'required|string|unique:patients,patient_login_id',
         'fname' => 'required|string|max:100',
         'lname' => 'required|string|max:100',
-        'email' => 'required|email|unique:patients,email',
+        'email' => 'nullable|email|unique:patients,email',
         'phone' => 'required|string|max:15',
-        'password' => 'nullable|string|min:6',
-        'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-        'user_token' => 'required|string'
+        // 'password' => 'nullable|string|min:6',
+        // 'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        // 'user_token' => 'required|string'
     ]);
 
     if ($validator->fails()) {
@@ -2343,7 +2340,8 @@ public function product_view(Request $request, $id)
 
     try {
         // Collect all validated fields
-        $data = $request->only(['patient_login_id', 'fname', 'lname', 'email', 'phone']);
+        // $data = $request->only(['patient_login_id', 'fname', 'lname', 'email', 'phone']);
+        $data = $request->only(['fname', 'lname', 'email', 'phone']);
 
         // Add hashed password if present
         if ($request->filled('password')) {

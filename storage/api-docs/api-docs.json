@@ -1736,19 +1736,6 @@
                                     "phone": {
                                         "type": "string",
                                         "example": "9876543210"
-                                    },
-                                    "password": {
-                                        "type": "string",
-                                        "format": "password",
-                                        "example": "Secret@123"
-                                    },
-                                    "image": {
-                                        "type": "string",
-                                        "format": "binary"
-                                    },
-                                    "user_name": {
-                                        "type": "string",
-                                        "example": "Mohan@123"
                                     }
                                 },
                                 "type": "object"

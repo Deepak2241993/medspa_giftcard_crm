@@ -55,6 +55,11 @@
               <!-- End Level two -->            
             </ul>
           </li>
+           @if(count(session()->get('cart', []))>0)
+          <li class="nav-item">
+          <button onclick="window.location.href='{{route('service-cart')}}'" type="button" data-toggle="dropdown" data-loading-text="Loading..."  class="btn btn-block btn-inverse btn-block btn-lg dropdown-toggle"><i class="fa fa-shopping-bag"></i> <span id="cart-total" class="hidden-xs">{{ count(session()->get('cart', [])) ? count(session()->get('cart', [])) : 0 }}
+            </span></button></li>
+             @endif
           <li class="nav-item">
             <form id="logout-form" action="{{ route('logout') }}" method="POST"
                 style="display: none;">

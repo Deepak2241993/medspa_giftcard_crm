@@ -62,7 +62,7 @@
                             </td>
                             <td>
                              
-                                @if(!empty($value->payment_intent && $value->payment_status == 'paid'))
+                                @if(!empty($value->payment_intent && $value->payment_status == 'paid' || $value->payment_intent && $value->payment_status == 'success'))
                                 <a  class="btn btn-block btn-outline-success"
                                     href="{{ route('service-invoice', ['transaction_data' => $value->id]) }}">
                                     Invoice
@@ -89,7 +89,7 @@
                             </td>
                             <td>
                                 <span
-                                    class="badge bg-{{ $value->payment_status == 'paid' ? 'success' : 'danger' }}">
+                                    class="badge bg-{{ $value->payment_status == 'paid' || $value->payment_status == 'success' ? 'success' : 'danger' }}">
                                     {{ucfirst($value->payment_status) }}
                                 </span>
                                 @if($value->payment_status == 'under_process')
