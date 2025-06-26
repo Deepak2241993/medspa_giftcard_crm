@@ -4,13 +4,13 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h3 class="mb-0">Services Deals</h3>
+                    <h3 class="mb-0">Services Deals/Categories</h3>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#">Home</a></li>
                         <li class="breadcrumb-item active" aria-current="page">
-                            Services Deals
+                            Services Deals/Categories
                         </li>
                     </ol>
                 </div>
@@ -78,42 +78,27 @@
                         </div>
                         <div class="card-body">
                             <!-- Top Section with Buttons and Search Form -->
-                            <div class="row mb-4">
-                                <div class="col-md-6">
-                                    <!-- Add More Button -->
-                                    <a href="{{ route('category.create') }}" class="btn btn-outline-primary w-100">Add More</a>
-                                </div>
-                
-                                <div class="col-md-6 d-flex justify-content-end">
-                                    <!-- Search Form -->
-                                    <form method="GET" action="{{ route('category.index') }}" class="d-flex w-100">
-                                        @csrf
-                                        <input type="text" class="form-control" id="cat_name" name="cat_name" placeholder="Deals Name" aria-label="Deals Name">
-                                        <input type="hidden" id="user_token" name="user_token" value="{{ Auth::user()->user_token }}">
-                                        <button type="submit" class="btn btn-outline-success ml-2">Search</button>
-                                    </form>
-                                </div>
-                            </div>
+                           
                 
                             <!-- Bulk Data Upload & Template Download Section -->
                             <div class="row">
                                 <!-- Bulk Data Upload -->
-                                <div class="col-md-6 mb-4">
+                                <div class="col-md-4 mb-4">
                                     <div class="card shadow-sm p-3">
-                                        <h5>Upload Bulk Data</h5>
+                                        
                                         <form action="{{ route('categories.import') }}" method="POST" enctype="multipart/form-data">
                                             @csrf
                                             <div class="form-group">
-                                                <label for="file">Choose CSV File</label>
+                                                <label for="file">Choose CSV File(for Upload Bulk Data)</label>
                                                 <input type="file" accept=".csv" name="file" class="form-control" required>
                                             </div>
                                             <button type="submit" class="btn btn-outline-primary w-100">Import</button>
                                         </form>
                                     </div>
+                                      <!-- Deals Template Download & Media Button -->
+                                    
                                 </div>
-                
-                                <!-- Deals Template Download & Media Button -->
-                                <div class="col-md-6 mb-4">
+                                <div class="col-md-4 mb-4">
                                     <div class="card shadow-sm p-3">
                                         <h5>Deals Template</h5>
                                         @if ($paginator->isEmpty())
@@ -124,6 +109,26 @@
                                         <button type="button" class="btn btn-outline-primary w-100 mt-3" data-toggle="modal" data-target="#media_modal">Media</button>
                                     </div>
                                 </div>
+                                <div class="col-md-4 mb-4">
+                                    <!-- Search Form -->
+                                    <h5>Search</h5>
+                                    <form method="GET" action="{{ route('category.index') }}" class="d-flex w-100">
+                                        @csrf
+                                        <input type="text" class="form-control" id="cat_name" name="cat_name" placeholder="Deals Name" aria-label="Deals Name">
+                                        <input type="hidden" id="user_token" name="user_token" value="{{ Auth::user()->user_token }}">
+                                        <button type="submit" class="btn btn-outline-success ml-2">Search</button>
+                                    </form>
+                                </div>
+                
+                              
+                            </div>
+                             <div class="row mb-4">
+                                <div class="col-md-2">
+                                    <!-- Add More Button -->
+                                    <a href="{{ route('category.create') }}" class="btn btn-dark w-100">Add More</a>
+                                </div>
+                
+                                
                             </div>
                         </div>
                     </div>
@@ -138,9 +143,11 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Categories Name</th>
-                                <th>Categories Image</th>
-                                <th>Categories Description</th>
+                                <th>Deals/Categories Name</th>
+                                {{-- <th>Categories Image</th> --}}
+                                <th>Short Description</th>
+                                <th>Start</th>
+                                <th>End</th>
                                 <th>Created At</th>
                                 <th>Action</th>
                             </tr>
@@ -151,14 +158,17 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $value['cat_name'] ?? 'NULL' }}
                                     </td>
-                                    <td>
+                                    {{-- <td>
                                         @if (isset($value['cat_image']))
                                             <img src="{{ $value['cat_image'] }}" style="height:100px; width:100px;" onerror="this.onerror=null; this.src='{{url('/No_Image_Available.jpg')}}';">
                                         @else
                                             No Image
                                         @endif
-                                    </td>
+                                    </td> --}}
                                     <td>{!! mb_strimwidth($value['cat_description'] ?? 'NULL', 0, 200, '...') !!}</td>
+                                    <td>{{ isset($value['deal_start_date']) ? date('m-d-Y h:i:s', strtotime($value['deal_start_date'])) : 'No Date' }}
+                                    <td>{{ isset($value['deal_end_date']) ? date('m-d-Y h:i:s', strtotime($value['deal_end_date'])) : 'No Date' }}
+                                    </td>
                                     <td>{{ isset($value['created_at']) ? date('m-d-Y h:i:s', strtotime($value['created_at'])) : 'No Date' }}
                                     </td>
                                     <td>

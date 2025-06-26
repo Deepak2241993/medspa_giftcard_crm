@@ -4,13 +4,13 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-            <h3 class="mb-0">Service Deals Create</h3>
+            <h3 class="mb-0">Service Deals/Categories</h3>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                 <li class="breadcrumb-item"><a href="#">Home</a></li>
                         <li class="breadcrumb-item active" aria-current="page">
-                            Service Deals Add/Update
+                            Service Deals/Categories
                         </li>
                 </ol>
             </div>
@@ -28,7 +28,7 @@
             </span>
             @endif
         <!--begin::Container-->
-        <div class="container-fluid">
+        <div class="container-fluid card">
             <!--begin::Row-->
             <div class="card-body p-4">
                 @if(isset($data))
@@ -43,10 +43,10 @@
                 @csrf
                 <div class="row">
                     <div class="mb-3 col-lg-6 self">
-                        <label for="title" class="form-label">Deal Name</label>
+                        <label for="title" class="form-label">Deal/Categories Name<spna class="text-danger">*</spna></label>
                         <input class="form-control" id="title" type="text" name="cat_name"
                             value="{{ isset($data) ? $data['cat_name'] : '' }}"
-                            placeholder="Category Name" onkeyup="slugCreate()">
+                            placeholder="Category Name" onkeyup="slugCreate()" required>
                     </div>
                     <div class="mb-3 col-lg-6 self">
                         <label for="slug" class="form-label">Deal Slug</label>
@@ -73,7 +73,7 @@
                     @if(isset($data))
                         <div class="mb-3 col-lg-6 mt-4 self">
                             <label for="image" class="form-label">Deal Image <span
-                                class="text-danger">* 670 X 250 Px Size Should be between 10kb to 2mb</span></label>
+                                class="text-danger"> 670 X 250 Px Size Should be between 10kb to 2mb</span></label>
                             @isset($data['cat_image'])
                                 <div id="image_class">
                                     <img src="{{ $data['cat_image'] }}"
@@ -95,7 +95,7 @@
                         </div>
                     @endif
 
-                    {{-- <div class="mb-3 col-lg-6 mt-4">
+                    <div class="mb-3 col-lg-6 mt-4">
                             <label for="from" class="form-label">Status</label>
                             <select class="form-control" name="status" id="from">
                                 <option value="1"{{ isset($data['status']) && $data['status'] == 1 ? 'selected' : '' }}
@@ -104,10 +104,10 @@
                         {{ isset($data['status']) && $data['status'] == 0 ? 'selected' : '' }}>
                         Inactive</option>
                     </select>
-                </div> --}}
+                </div>
 
-                <div class="mb-3 col-lg-12">
-                    <button  class="btn btn-block btn-outline-primary" type="submit">Submit</button>
+                <div class="mb-3 col-lg-3">
+                    <button  class="btn btn-block btn-outline-primary" type="submit">{{isset($data)?'Update':'Submit'}}</button>
                 </div>
             </div>
             </form>
@@ -172,7 +172,6 @@
         $(document).ready(function() {
             $('.summernote').summernote({
                 height: 300, // Set height of the editor
-                width: 860, // Set width of the editor
                 focus: true, // Focus the editor on load
                 fontSizes: ['8', '9', '10', '11', '12', '14', '18', '22', '24', '36', '48', '64', '82', '150'], // Font sizes
                 toolbar: [

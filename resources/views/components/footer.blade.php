@@ -1,10 +1,6 @@
-<footer class="app-footer">
-
-    <!--begin::Copyright-->
-    <strong class="ml-4">
-        Copyright &copy; {{date('Y')}}
-        <a href="https://forevermedspanj.com/">Forevermedspanj</a>.
-    </strong>
-    All rights reserved.
-    <!--end::Copyright-->
-</footer>
+ <footer class="website-footer">
+        <div class="footer-content">
+            <p>All Rights Reserved. © {{date('Y')}} <a href="https://www.forevermedspanj.com" target="_blank">FOREVER
+                    MEDSPA</a> Design By : <a href="#" target="_blank">TEMZ Solution Pvt.Ltd</a></p>
+        </div>
+    </footer>

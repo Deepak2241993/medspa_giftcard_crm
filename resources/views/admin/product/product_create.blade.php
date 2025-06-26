@@ -95,10 +95,10 @@
 
                 <div class="mb-12 col-lg-12 self">
                     <label for="short_description" class="form-label">Short Description
-                        <span class="text-danger"> (Text Limit 50 Word)</span>
+                        <span class="text-danger"> (Text Limit 100 Word)</span>
                     </label>
                     <textarea name="short_description" id="short_description" class="form-control"
-                        required>{{ isset($data) ? $data['short_description'] : '' }}</textarea>
+                        required rows="4">{{ isset($data) ? $data['short_description'] : '' }}</textarea>
                     <span id="count" class="text-danger"></span>
                 </div>
                 <div class="mb-12 col-lg-12 self mt-3 UnitHideShow">
@@ -106,11 +106,11 @@
                     <textarea name="product_description" id="product_description" class="form-control summernote"
                         onkeyup="calculate()">{{ isset($data) ? $data['product_description'] : '' }}</textarea>
                 </div>
-                <div class="mb-12 col-lg-12 self mt-3 UnitHideShow">
+                {{-- <div class="mb-12 col-lg-12 self mt-3 UnitHideShow">
                     <label for="prerequisites" class="form-label">Prerequisites</label>
                     <textarea name="prerequisites" id="prerequisites"
                         class="form-control summernote">{{ isset($data) ? $data['prerequisites'] : '' }}</textarea>
-                </div>
+                </div> --}}
               
 
                 @php
@@ -147,13 +147,13 @@
                     </div>
                 @endif
 
-                <div class="mb-3 col-lg-12 self" id="image_field"
+                {{-- <div class="mb-3 col-lg-12 self" id="image_field"
                     style="display:{{ isset($data['id']) ? 'none' : 'block' }}">
                     <label for="product_image" class="form-label">Service Image<span
                             class="text-danger">* 350 X 350 Px Size Should be between 10kb to 2mb</span></label><br>
                     <input class="form-control" id="image" type="file" name="product_image[]" multiple
                         {{ isset($data) ? '' : 'required' }}>
-                </div>
+                </div> --}}
 
                 <div class="mb-3 col-lg-6 self mt-2 numberInputContainer">
                     <label for="amount" class="form-label">Service Original Price<span class="text-danger">*</span>
@@ -189,13 +189,13 @@
                     </select>
                 </div>
 
-                <div class="mb-12 col-lg-12 self">
+                {{-- <div class="mb-12 col-lg-12 self">
                     <label for="search_keywords" class="form-label">Search Keywords</label>
                     <textarea name="search_keywords" id="search_keywords" rows="4"
                         class="form-control">{{ isset($data) ? $data['search_keywords'] : '' }}</textarea>
 
-                </div>
-                {{-- <div class="mb-12 col-lg-12 self">
+                </div> --}}
+                <div class="mb-12 col-lg-12 self">
                             <label for="meta_title" class="form-label">Meta Title</label>
                             <textarea name="meta_title"  id="meta_title" rows="4" class="form-control">{{ isset($data)?$data['meta_title']:'' }}</textarea>
             </div>
@@ -208,7 +208,7 @@
                 <label for="meta_keywords" class="form-label">Meta Keywords</label>
                 <textarea name="meta_keywords" id="meta_keywords" rows="4"
                     class="form-control">{{ isset($data)?$data['meta_keywords']:'' }}</textarea>
-            </div> --}}
+            </div>
 
             <div class="mb-3 col-lg-6">
                 <label for="from" class="form-label">Popular Services</label>
@@ -286,7 +286,6 @@ totalAmt.addEventListener("change", (e)=>{
         $(document).ready(function() {
             $('.summernote').summernote({
                 height: 300, // Set height of the editor
-                width: 860, // Set width of the editor
                 focus: true, // Focus the editor on load
                 fontSizes: ['8', '9', '10', '11', '12', '14', '18', '22', '24', '36', '48', '64', '82', '150'], // Font sizes
                 toolbar: [
@@ -339,12 +338,12 @@ totalAmt.addEventListener("change", (e)=>{
             var words = string.trim().split(/\s+/).filter(word => word.length > 0);
             var wordCount = words.length;
 
-            if (wordCount > 50) {
-                document.getElementById('short_description').value = words.slice(0, 50).join(' ');
-                wordCount = 50;
+            if (wordCount > 100) {
+                document.getElementById('short_description').value = words.slice(0, 100).join(' ');
+                wordCount = 100;
             }
 
-            document.getElementById('count').innerHTML = wordCount + " / 50 words";
+            document.getElementById('count').innerHTML = wordCount + " / 100 words";
         };
 
         // Add event listener to count words when the content changes

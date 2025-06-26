@@ -30,7 +30,7 @@ Route::view('email','email.giftcard');
 Route::post('/checkusername',[AdminController::class,'CheckUserName'])->name('checkusername');
 Route::post('/patient-signup',[AdminController::class,'PatientSignup'])->name('patient-signup');
 // All Frontend Route Start
-Route::get('/',[App\Http\Controllers\GiftController::class,'christmas_gift_card'])->name('home');
+Route::get('/',[App\Http\Controllers\GiftController::class,'HOME'])->name('home');
 Route::get('product-page/{token?}/{slug}', 'ProductController@productpage')->name('product_list');
 Route::get('productdetails/{slug}','ProductController@productdetails')->name('productdetails');
 Route::get('services','ServiceUnitController@ServicePage')->name('services');

@@ -53,9 +53,9 @@
                             <th>View Order</th>
                             <th>Invoice</th>
                             <th>Order Number</th>
-                            <th>Full Name</th>
+                            {{-- <th>Full Name</th>
                             <th>Email</th>
-                            <th>Phone</th>
+                            <th>Phone</th> --}}
                             <th>Transaction Amount</th>
                             <th>Transaction Id</th>
                             <th>Created Date & Time</th>
@@ -85,9 +85,9 @@
                                 <td> <span class="badge bg-danger">No Payment</span></td>
                                 @endif
                                 <td>{{ $value->order_id }}</td>
-                                <td>{{ $value->fname . ' ' . $value->lname }}</td>
+                                {{-- <td>{{ $value->fname . ' ' . $value->lname }}</td>
                                 <td>{{ $value->email }}</td>
-                                <td>{{ $value->phone }}</td>
+                                <td>{{ $value->phone }}</td> --}}
                                 <td>{{ $value->final_amount }}</td>
                                 <td>{{ $value->payment_intent }}</td>
                                 <td>{{ date('m-d-Y h:i:m', strtotime($value->updated_at)) }}
