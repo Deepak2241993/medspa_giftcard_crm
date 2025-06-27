@@ -227,10 +227,6 @@
   animation: cartBounce 0.3s ease-out;
 }
 
-.cart-count.hidden {
-  display: none;
-}
-
 @keyframes cartBounce {
   0% {
     transform: scale(0);

@@ -45,7 +45,7 @@ Route::post('cart','PopularOfferController@Cart')->name('cart');
 Route::get('cartview','PopularOfferController@Cartview')->name('cartview');
 Route::post('/cart/remove','PopularOfferController@CartRemove')->name('cartremove');
 Route::post('/update-cart', 'PopularOfferController@updateCart')->name('update-cart');
-Route::post('checkout','PopularOfferController@Checkout')->name('checkout');
+Route::get('checkout','PopularOfferController@Checkout')->name('checkout');
 Route::get('checkout-view','PopularOfferController@checkoutView')->name('checkout_view');
 Route::post('/giftcards-validate', 'GiftsendController@giftcardValidate')->name('giftcards-validate');
 Route::post('checkout-process','StripeController@CheckoutProcess')->name('checkout_process');
@@ -62,6 +62,8 @@ Route::post('/coupon-verify','GiftsendController@giftvalidate')->name('coupon-ve
 Route::post('/giftcardpayment',[App\Http\Controllers\StripeController::class,'giftcardpayment'])->name('giftcardpayment');
 Route::post('/balance-check','GiftsendController@knowbalance')->name('balance-check');
 Route::post('/payment_cnf','GiftsendController@payment_confirmation')->name('payment_cnf');
+Route::post('/cart/clear', 'PopularOfferController@clearCart')->name('cart.clear');
+
 // Route::get('category/{token?}','ProductCategoryController@categorytpage')->name('category');
 // Route::get('services/{slug}','ProductController@productpage')->name('product');
 

@@ -1,28 +1,42 @@
-
-@extends('layouts.front-master')
+@extends('layouts.front_product')
 @section('body')
-@push('csslink')
-<style>
-     .required{
-        color:red !important;
-    }
-
-</style>
-<!-- CSS here -->
-<link rel="stylesheet" href="{{url('/product_page')}}/css/bootstrap.min.css">
-<link rel="stylesheet" href="{{url('/product_page')}}/css/main.css">
-{{-- <link rel="stylesheet" href="{{url('/')}}/giftcards/css/style.css">  --}}
-@endpush
     @php
         $cart = session()->get('cart', []);
         $amount = 0;
     @endphp
-  
+    @push('css')
+    .required{
+        color:red !important;
+    }
+    @endpush
     {{-- {{dd(session()->get('totalValue'))}} --}}
     {{-- {{dd(session()->get('cart'))}} --}}
 
     <!-- Body main wrapper start -->
-<div class="container">
+    <main>
+
+        <!-- Breadcrumb area start  -->
+        <div class="breadcrumb__area theme-bg-1 p-relative z-index-11 pt-95 pb-95">
+            <div class="breadcrumb__thumb" data-background="{{url('/uploads/FOREVER-MEDSPA')}}/med-spa-banner.jpg"></div>
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-xxl-12">
+                        <div class="breadcrumb__wrapper text-center">
+                            <h2 class="breadcrumb__title">Checkout</h2>
+                            <div class="breadcrumb__menu">
+                                <nav>
+                                    <ul>
+                                        <li><span><a href="{{ url('/') }}">Home</a></span></li>
+                                        <li><span>checkout</span></li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Breadcrumb area start  -->
 
         <!-- checkout-area start -->
         <section class="checkout-area section-space">
@@ -112,7 +126,7 @@
                                     <table>
                                         <thead>
                                             <tr>
-                                                {{-- <th class="product-name">Image</th> --}}
+                                                <th class="product-name">Image</th>
                                                 <th class="product-name">Product</th>
                                                 <th class="product-name">Qty</th>
                                                 <th class="product-name">Price</th>
@@ -123,7 +137,8 @@
                                             @foreach ($cart as $key => $item)
                                             <tr>
                                                 {{-- <td>{{ $loop->iteration }}</td> --}}
-                                                @if ($item['type'] === 'product')
+                                                <td>
+                                                    @if ($item['type'] === 'product')
                                                         @php
                                                             $product = App\Models\Product::find($item['id']);
                                                             $image = explode('|', $product->product_image);
@@ -132,11 +147,8 @@
                                                             $amount += $subtotal;
                                                            
                                                         @endphp
-                                                    {{--  <td>
-                                                    
-                                                       <img src="{{ $image[0] }}" style="height:100px; width:100px;" 
-                                                            onerror="this.onerror=null; this.src='{{ url('/No_Image_Available.jpg') }}';"> 
-                                                    </td>--}}
+                                                        <img src="{{ $image[0] }}" style="height:100px; width:100px;" 
+                                                            onerror="this.onerror=null; this.src='{{ url('/No_Image_Available.jpg') }}';">
                                                     @elseif ($item['type'] === 'unit')
                                                         @php
                                                             $unit = App\Models\ServiceUnit::find($item['id']);
@@ -145,12 +157,10 @@
                                                             $subtotal = $price*$item['quantity'];
                                                             $amount += $subtotal;
                                                         @endphp
-                                                       {{-- <td>
-                                                         <img src="{{ $image[0] }}" style="height:100px; width:100px;" 
+                                                        <img src="{{ $image[0] }}" style="height:100px; width:100px;" 
                                                             onerror="this.onerror=null; this.src='{{ url('/No_Image_Available.jpg') }}';">
-                                                        </td> --}}
                                                     @endif
-                                                
+                                                </td>
                                                 <td>
                                                     @if ($item['type'] === 'product')
                                                         {{ $product->product_name }}
@@ -189,14 +199,14 @@
                                                     <td> -${{ session('total_gift_applyed') }}</td>
                                                 </tr>
                                             @endif
-                                                {{-- <tr class="cart-subtotal">
+                                                <tr class="cart-subtotal">
                                                     <td>Tax 0%:</td>
                                                     @php
                                                     $taxamount = ($amount * 0) / 100;
                                                     // echo "+$" . $taxamount;
                                                     @endphp
                                                     <td> +${{ session('tax_amount') ? session('tax_amount'):$taxamount }}</td>
-                                                </tr> --}}
+                                                </tr>
                                             <tr class="order-total">
                                                 <th>Order Total</th>
                                                 <td>
@@ -208,7 +218,7 @@
                                                                     2
                                                                   ) 
                                                                 : number_format(
-                                                                    $amount, 
+                                                                    $amount + $taxamount, 
                                                                     2
                                                                   ) 
                                                             }}
@@ -239,14 +249,11 @@
         </section>
         <!-- checkout-area end -->
 
-    </div>
+    </main>
     <!-- Body main wrapper end -->
 @endsection
 
 @push('footerscript')
- <script src="{{url('/product_page')}}/js/jquery-3.6.0.min.js"></script>
-    <script src="{{url('/product_page')}}/js/bootstrap.bundle.min.js"></script>
-    <script src="{{url('/')}}/giftcards/js/custom.js"></script>
 {{-- <script>
 // Disable right-click context menu
 document.addEventListener('contextmenu', function(event) {

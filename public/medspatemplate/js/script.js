@@ -583,20 +583,18 @@ document.addEventListener("click", (e) => {
 
     const originalText = button.innerHTML
     button.style.background = "var(--success-color)"
-    button.innerHTML = '<i class="fas fa-check"></i> <span>Booking...</span>'
+    // button.innerHTML = '<i class="fas fa-check"></i> <span>Booking...</span>'
 
     button.style.animation = "pulse 1s ease-in-out"
 
     setTimeout(() => {
-      button.innerHTML = '<i class="fas fa-calendar-check"></i> <span>Request Sent!</span>'
+      // button.innerHTML = '<i class="fas fa-calendar-check"></i> <span>Request Sent!</span>'
       setTimeout(() => {
         button.innerHTML = originalText
         button.style.background = ""
         button.style.animation = ""
       }, 2000)
     }, 1000)
-
-    showNotification("Booking request sent successfully!", "success")
   }
 })
 function showNotification(message, type = "info") {
@@ -721,17 +719,14 @@ function toggleQuantityControls(button) {
   const buttonIcon = button.querySelector("i")
 
   if (quantityControls.style.display === "none" || !quantityControls.style.display) {
-   
     quantityControls.style.display = "flex"
     serviceFooter.classList.add("quantity-mode")
     buttonText.textContent = "Add to Cart"
     buttonIcon.className = "fas fa-shopping-cart"
     button.style.background = "var(--success-color)"
 
-   
     updatePriceDisplay(serviceFooter, 1)
 
-    
     quantityControls.style.opacity = "0"
     quantityControls.style.transform = "translateY(10px)"
     setTimeout(() => {
@@ -744,9 +739,10 @@ function toggleQuantityControls(button) {
     const basePrice = Number.parseInt(button.dataset.basePrice)
     const totalPrice = basePrice * quantity
     const serviceName = serviceFooter.closest(".service-card").querySelector("h3").textContent
+    const productId = button.dataset.id
 
-    
-    addToCart(serviceName, quantity, basePrice)
+    // ✅ Call your AJAX function
+    addcart(productId, quantity)
 
     button.style.background = "var(--success-color)"
     buttonText.textContent = "Added!"
@@ -759,7 +755,6 @@ function toggleQuantityControls(button) {
       buttonIcon.className = "fas fa-arrow-right"
       button.style.background = ""
 
-  
       serviceFooter.querySelector(".quantity-display").textContent = "1"
       updatePriceDisplay(serviceFooter, 1)
     }, 2000)
@@ -767,6 +762,7 @@ function toggleQuantityControls(button) {
     showNotification(`Added ${quantity}x ${serviceName} - Total: $${totalPrice}`, "success")
   }
 }
+
 
 function updateQuantity(button, change) {
   const serviceFooter = button.closest(".service-footer")
@@ -880,10 +876,8 @@ function updateCartCount() {
 
   if (cartCount > 0) {
     cartCountElement.textContent = cartCount
-    cartCountElement.classList.remove("hidden")
     cartIcon.classList.add("has-items")
   } else {
-    cartCountElement.classList.add("hidden")
     cartIcon.classList.remove("has-items")
   }
 }
@@ -940,59 +934,9 @@ function updateCartItemQuantity(itemId, newQuantity) {
   }
 }
 
-function updateCartSidebar() {
-  const cartItemsContainer = document.getElementById("cartItems")
-  const emptyCart = document.getElementById("emptyCart")
-  const cartSidebarFooter = document.getElementById("cartSidebarFooter")
-  const cartSubtotal = document.getElementById("cartSubtotal")
-  const cartTotal = document.getElementById("cartTotal")
-
-  if (cartItems.length === 0) {
-    emptyCart.style.display = "block"
-    cartItemsContainer.style.display = "none"
-    cartSidebarFooter.style.display = "none"
-  } else {
-    emptyCart.style.display = "none"
-    cartItemsContainer.style.display = "block"
-    cartSidebarFooter.style.display = "block"
-
-  
-    cartItemsContainer.innerHTML = cartItems
-      .map(
-        (item) => `
-        <div class="cart-item">
-          <div class="cart-item-header">
-            <div class="cart-item-title">${item.name}</div>
-            <button class="cart-item-remove" onclick="removeFromCart(${item.id})">
-              <i class="fas fa-trash"></i>
-            </button>
-          </div>
-          <div class="cart-item-details">
-            <div class="cart-item-quantity">
-              <div class="cart-quantity-controls">
-                <button class="cart-quantity-btn" onclick="updateCartItemQuantity(${item.id}, ${
-                  item.quantity - 1
-                })" ${item.quantity <= 1 ? "disabled" : ""}>
-                  <i class="fas fa-minus"></i>
-                </button>
-                <span class="cart-quantity-display">${item.quantity}</span>
-                <button class="cart-quantity-btn" onclick="updateCartItemQuantity(${item.id}, ${item.quantity + 1})">
-                  <i class="fas fa-plus"></i>
-                </button>
-              </div>
-            </div>
-            <div class="cart-item-price">$${item.total}</div>
-          </div>
-        </div>
-      `,
-      )
-      .join("")
-
-    const subtotal = cartItems.reduce((sum, item) => sum + item.total, 0)
-    cartSubtotal.textContent = `$${subtotal}`
-    cartTotal.textContent = `$${subtotal}`
-  }
+function updateCartSidebar(cartHtml, subtotal, total, cartCountVal) {
 }
+
 
 function clearCart() {
   cartItems.length = 0

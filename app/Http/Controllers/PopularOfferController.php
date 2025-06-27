@@ -116,7 +116,6 @@ class PopularOfferController extends Controller
     public function Cart(Request $request)
     {
         
-    
         // Retrieve cart from session or initialize an empty array
         $cart = session()->get('cart', []);
 
@@ -131,11 +130,11 @@ class PopularOfferController extends Controller
             $cart[$unitKey] = [
                 'type'      => 'product',
                 'id'        => $request->product_id,
-                'quantity'  => 1,
+                'quantity'  => $request->quantity ?? 1, // Default quantity to 1 if not provided
             ];
         }
 
-        // For unit Unit Purchase
+        // For Unit Purchase
         if (!empty($request->unit_id)) {
             $unit_data = ServiceUnit::find($request->unit_id);
             // Generate a unique key for each unit
@@ -181,6 +180,7 @@ class PopularOfferController extends Controller
     
         // Save the updated cart back to the session
         session()->put('cart', $cart);
+        
         // Put Patient Id In Session For Buyinf from patient Page
        // Store patient_id in session
     if ($request->has('patient_id')) {
@@ -196,45 +196,22 @@ class PopularOfferController extends Controller
 //  For Update cart
 public function updateCart(Request $request)
 {
-    $request->validate([
-        'id'       => 'required|integer',
-        'type'     => 'required|string',
-        'quantity' => 'required|integer|min:1',
-        'key'  => 'required|string', // Ensure cart_id is provided
-    ]);
+    $cart = session()->get('cart', []);
+    $key = $request->key;
+    $quantity = (int) $request->quantity;
 
-       // Retrieve the cart from the session
-       $cart = session()->get('cart', []);
-    //    dd($cart);
-       $cartId = $request->key;
-   
-       if (isset($cart[$cartId]) && $cart[$cartId]['type'] == 'unit') {
-           $cart[$cartId]['quantity'] = $request->quantity;
-        // Save the updated cart back to the session
+    if (isset($cart[$key])) {
+        $cart[$key]['quantity'] = $quantity;
         session()->put('cart', $cart);
-        return response()->json([
-            'status' => '200',
-            'success' => 'Cart updated successfully!',
-            'cart' => [$request->key => $cart[$request->key]], // Return only the updated item
-        ]);
     }
-    if (isset($cart[$cartId]) && $cart[$cartId]['type'] == 'product') {
 
-        $cart[$cartId]['quantity'] = $request->quantity;
-     // Save the updated cart back to the session
-     session()->put('cart', $cart);
-     return response()->json([
-         'status' => '200',
-         'success' => 'Cart updated successfully!',
-         'cart' => [$request->key => $cart[$request->key]], // Return only the updated item
-     ]);
- }
-
+    // Return updated data
     return response()->json([
-        'status' => '400',
-        'error' => 'Item not found in cart.',
+        'success' => true,
+        'cartItems' => $cart // or your formatted version
     ]);
 }
+
 
 
 
@@ -323,52 +300,28 @@ public function updateCart(Request $request)
     }
 
 
-    public function Checkout(Request $request)
-    {
-        try {
-            if (Auth::guard('patient')->check()) {
-                $cart = session()->get('cart', []);
-    
-                if (!empty($request->giftcards)) {
-                    // Initialize or retrieve giftcards array from the session
-                    $giftcards = session()->get('giftcards', []);
-    
-                    // Iterate and add gift card details from the request
-                    foreach ($request->giftcards as $giftcard) {
-                        if (!isset($giftcard['number']) || !isset($giftcard['amount'])) {
-                            continue;
-                        }
-                        $giftcards[] = [
-                            'number' => $giftcard['number'],
-                            'amount' => $giftcard['amount'],
-                        ];
-                    }
-    
-                    // Store updated session data
-                    session()->put([
-                        'giftcards' => $giftcards,
-                        'total_gift_applyed' => $request->total_gift_applyed,
-                        'tax_amount' => $request->tax_amount,
-                        'totalValue' => $request->totalValue,
-                    ]);
-    
-                    return response()->json(['status' => 200, 'message' => 'Gift Cards stored in session successfully.', 'error' => false]);
-                } else {
-                    return response()->json(['status' => 200, 'message' => 'No Giftcard Applied', 'error' => false]);
-                }
-            } else {
-                Log::warning('Unauthorized checkout attempt', ['ip' => $request->ip()]);
-                return response()->json(['status' => 401, 'message' => 'User not authenticated', 'error' => true]);
-            }
-        } catch (\Exception $e) {
-            Log::error('Error during checkout process', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-    
-            return response()->json(['status' => 500, 'message' => 'Internal server error', 'error' => true]);
+public function Checkout(Request $request)
+{
+    try {
+        if (Auth::guard('patient')->check()) {
+            return redirect()->route('checkout_view')->with('success', 'Please proceed to checkout.');
+        } else {
+            return redirect()->route('patient-login')->with('error', 'Please login to continue.');
         }
+    } catch (\Exception $e) {
+        Log::error('Error during checkout process', [
+            'message' => $e->getMessage(),
+            'trace' => $e->getTraceAsString(),
+        ]);
+
+        return response()->json([
+            'status' => 500,
+            'message' => 'Internal server error',
+            'error' => true
+        ]);
     }
+}
+
 
     
     
@@ -381,7 +334,13 @@ public function updateCart(Request $request)
         public function AdminPaymentProcess(Request $request){
             return view('admin.cart.payment-process');
         }
-    
+    // For Claer All Cart Value
+    public function clearCart(Request $request)
+{
+    session()->forget('cart'); // Remove the cart session
+    return response()->json(['success' => true, 'message' => 'Cart cleared successfully']);
+}
+
         public function CheckoutProcess(Request $request)
         {
             
