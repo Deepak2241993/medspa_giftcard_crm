@@ -271,8 +271,7 @@ function updateCartItemQuantity(key, newQuantity) {
         }
     });
 }
-     
-  
+    </script> 
 
     @endpush
 
