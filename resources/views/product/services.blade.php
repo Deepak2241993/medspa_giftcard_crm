@@ -25,6 +25,79 @@
   opacity: 1;
   transform: translateY(0);
 }
+/* For Pagination  */
+ .pagination-wrapper nav ul.pagination {
+        display: flex;
+        justify-content: center;
+        padding: 1rem;
+        gap: 0.4rem;
+    }
+
+    .pagination-wrapper .page-link {
+        color: #dd7344;
+        border: 1px solid #dd7344;
+        padding: 8px 12px;
+        border-radius: 6px;
+        transition: all 0.2s ease-in-out;
+        background-color: white;
+    }
+
+    .pagination-wrapper .page-link:hover {
+        background-color: #dd7344;
+        color: white;
+    }
+
+    .pagination-wrapper .page-item.active .page-link {
+        background-color: #dd7344;
+        color: white;
+        border-color: #dd7344;
+    }
+
+    .pagination-wrapper .page-item.disabled .page-link {
+        color: #ccc;
+        border-color: #eee;
+        background-color: #f9f9f9;
+    }
+      /* Remove default list styles */
+    .pagination-wrapper ul.pagination {
+        list-style: none;
+        padding-left: 0;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        gap: 0.4rem;
+        flex-wrap: wrap;
+    }
+
+    /* Style the pagination links */
+    .pagination-wrapper .page-link {
+        color: #dd7344;
+        border: 1px solid #dd7344;
+        padding: 8px 14px;
+        border-radius: 6px;
+        transition: all 0.2s ease-in-out;
+        background-color: white;
+        text-decoration: none;
+    }
+
+    .pagination-wrapper .page-link:hover {
+        background-color: #dd7344;
+        color: white;
+    }
+
+    /* Active page style */
+    .pagination-wrapper .page-item.active .page-link {
+        background-color: #dd7344;
+        color: white;
+        border-color: #dd7344;
+    }
+
+    /* Disabled buttons */
+    .pagination-wrapper .page-item.disabled .page-link {
+        color: #ccc;
+        border-color: #eee;
+        background-color: #f9f9f9;
+    }
 </style>
 @endpush
     
@@ -64,18 +137,19 @@
                     </button>
                 </div>
 
-                <div class="categories-list" id="categoriesList">
-                    @foreach ($category as $value)
-                    
-                    <div class="category-item" data-category="botox">
-                        <div class="category-content">
-                            <h4>{{$value->cat_name??''}}</h4>
-                        </div>
-                    </div>
-                    @endforeach
+               <div class="categories-list" id="categoriesList">
+                @foreach ($category as $value)
+                    <div class="category-item" data-category="{{ $value->slug ?? '' }}" onclick="selectCategory('{{ $value->slug ?? '' }}', this)">
+                    <div class="category-content">
+                        <a href="{{route('category-list',$value->slug)}}" style="text-decoration: none; color: inherit;">
+                            <h4>{{ $value->cat_name ?? '' }}</h4>
+                        </a>
 
-                    
+                    </div>
+                    </div>
+                @endforeach
                 </div>
+
             </div>
 
             <div class="contact-info">
@@ -121,8 +195,8 @@
 
             <div class="service-options">
                 <!-- Service Option 1 -->
-                 @if (isset($data))
-                @foreach ($data as $value)
+                 @if (isset($services))
+                @foreach ($services as $value)
                 
                 <div class="service-card">
                     <div class="service-card-header">
@@ -177,8 +251,12 @@
                     </div>
                 </div>
                    @endforeach
+                   <!-- Pagination links -->
+               <div class="pagination-wrapper">
+                    {{ $services->links() }}
+                </div>
                     @else
-                        <p>{{ $data['error'] }}</p>
+                        <p>{{ $services['error'] }}</p>
                     @endif
 
                 
@@ -272,6 +350,29 @@ function updateCartItemQuantity(key, newQuantity) {
     });
 }
     </script> 
+<script>
+    const categoryMap = @json($categoryMap);
+    function selectCategory(category, selectedItem) {
+  document.querySelectorAll(".category-item").forEach((item) => {
+    item.classList.remove("active");
+  });
+
+  selectedItem.classList.add("active");
+
+  const searchInput = document.getElementById("serviceSearch");
+  const categoryName = categoryMap[category] || "";
+  searchInput.value = categoryName;
+
+  if (categoryName) {
+    performSearch(categoryName);
+  }
+
+  showNotification(`Selected category: ${categoryName}`, "success");
+  createRipple(selectedItem);
+}
+</script>
+
+
 
     @endpush
 

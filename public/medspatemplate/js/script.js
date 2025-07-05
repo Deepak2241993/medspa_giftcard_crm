@@ -535,47 +535,9 @@ function handleCategorySearchFocus() {
   }
 }
 
-function selectCategory(category, selectedItem) {
-  document.querySelectorAll(".category-item").forEach((item) => {
-    item.classList.remove("active")
-  })
 
-  selectedItem.classList.add("active")
 
-  const searchInput = document.getElementById("serviceSearch")
-  const categoryMap = {
-    botox: "Botox Treatments",
-    fillers: "Dermal Fillers",
-    laser: "Laser Treatments",
-    facials: "Facial Treatments",
-    body: "Body Treatments",
-    wellness: "Wellness Services",
-    skincare: "Advanced Skincare",
-    "anti-aging": "Anti-Aging Treatments",
-    "hair-removal": "Hair Removal",
-    "skin-tightening": "Skin Tightening",
-    "acne-treatment": "Acne Treatment",
-    "scar-treatment": "Scar Treatment",
-    pigmentation: "Pigmentation Treatment",
-    "chemical-peels": "Chemical Peels",
-    microneedling: "Microneedling",
-    coolsculpting: "CoolSculpting",
-    "thread-lift": "Thread Lift",
-    "prp-therapy": "PRP Therapy",
-    "iv-therapy": "IV Therapy",
-    "weight-management": "Weight Management",
-  }
 
-  const categoryName = categoryMap[category] || ""
-  searchInput.value = categoryName
-
-  if (categoryName) {
-    performSearch(categoryName)
-  }
-
-  showNotification(`Selected category: ${categoryName}`, "success")
-  createRipple(selectedItem)
-}
 
 document.addEventListener("click", (e) => {
   if (e.target.closest(".book-now-btn")) {

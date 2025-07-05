@@ -160,42 +160,53 @@ class ServiceUnitController extends Controller
      }
 
      //  For Showing All Service And Unit on Same Page
-public function ServicePage(Request $request){
+public function ServicePage(Request $request)
+{
 
-    $sliders =Banner::where('status',1)->where('is_deleted',0)->orderBy('id','DESC')->get();
-    // $category_result=ProductCategory::where('cat_is_deleted','=',0)->where('status','=',1)->where('user_token','FOREVER-MEDSPA')->get();        
-    //     $data = Product::where('status', '=', 1)
-    //     ->where('product_is_deleted', '=', 0)
-    //     ->where(function ($query) use ($id) {
-    //         $query->where('cat_id', 'LIKE', '%|' . $id . '|%')
-    //               ->orWhere('cat_id', 'LIKE', $id . '|%')
-    //               ->orWhere('cat_id', 'LIKE', '%|' . $id)
-    //               ->orWhere('cat_id', $id);
-    //     })
-    //     ->paginate(20);
-    
+    $services = Product::where('product_is_deleted', 0)
+        ->where('status', 1)
+        ->where('user_token', 'FOREVER-MEDSPA')
+        ->paginate(3); // Paginate with 15 per page
 
-        $data = Product::where('product_is_deleted','=',0)->where('status','=',1)->paginate(10);
-        $category=ProductCategory::where('cat_is_deleted','=',0)->where('status','=',1)->where('user_token','FOREVER-MEDSPA')->orderBy('id','DESC')->get();
-        $popular_service=Product::where('popular_service',1)->where('product_is_deleted','=',0)->where('status','=',1)->where('user_token','FOREVER-MEDSPA')->orderBy('id','DESC')->get();
-       
-        //  For Auto Search Complete
-        $search_category = ProductCategory::where('cat_is_deleted', 0)
-        ->where('status','=',1)
+    $category = ProductCategory::where('cat_is_deleted', 0)
+        ->where('status', 1)
+        ->where('user_token', 'FOREVER-MEDSPA')
+        ->orderBy('id', 'DESC')
+        ->get();
+
+    // Autocomplete array for frontend search
+    $search_category = ProductCategory::where('cat_is_deleted', 0)
+        ->where('status', 1)
         ->where('user_token', 'FOREVER-MEDSPA')
         ->pluck('cat_name')
         ->toArray();
-        $search_product=Product::where('product_is_deleted','=',0)->where('status','=',1)->where('user_token','FOREVER-MEDSPA')->pluck('product_name')->toArray();
-        $finalarray = array_merge($search_category,$search_product);
 
-        $search = json_encode($finalarray);
+    $search_product = Product::where('product_is_deleted', 0)
+        ->where('status', 1)
+        ->where('user_token', 'FOREVER-MEDSPA')
+        ->pluck('product_name')
+        ->toArray();
 
-    return view('product.services',compact('sliders','data','category','search','popular_service'));
-    // return view('product.services',compact('data','category','search','popular_service'));
-    // return back()->with('message','No Data Found');
-    
-   
+    $finalarray = array_merge($search_category, $search_product);
+    $search = json_encode($finalarray);
+
+    // Category slug => name map for frontend JS
+    // dd($category);
+    $categoryMap = [];
+    foreach ($category as $cat) {
+        if (!empty($cat->slug) && !empty($cat->cat_name)) {
+            $categoryMap[$cat->slug] = $cat->cat_name;
+        }
+    }
+
+    return view('product.services', compact(
+        'services',
+        'category',
+        'search',
+        'categoryMap'
+    ));
 }
+
 
 // Create Unit Quickly
 public function CreateUnitQuickly(Request $request,ServiceUnit $serviceUnit)
