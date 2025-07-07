@@ -166,7 +166,7 @@ public function ServicePage(Request $request)
     $services = Product::where('product_is_deleted', 0)
         ->where('status', 1)
         ->where('user_token', 'FOREVER-MEDSPA')
-        ->paginate(3); // Paginate with 15 per page
+        ->paginate(10); // Paginate with 10 per page
 
     $category = ProductCategory::where('cat_is_deleted', 0)
         ->where('status', 1)
@@ -191,7 +191,6 @@ public function ServicePage(Request $request)
     $search = json_encode($finalarray);
 
     // Category slug => name map for frontend JS
-    // dd($category);
     $categoryMap = [];
     foreach ($category as $cat) {
         if (!empty($cat->slug) && !empty($cat->cat_name)) {
@@ -199,11 +198,32 @@ public function ServicePage(Request $request)
         }
     }
 
+    // Fetch all services for the frontend JS
+    $serviceData = Product::where('product_is_deleted', 0)
+        ->where('status', 1)
+        ->where('user_token', 'FOREVER-MEDSPA')
+        ->get()
+        ->map(function ($service) {
+            return [
+                'id' => $service->slug ?? $service->id, // fallback if slug missing
+                'product_name' => $service->product_name,
+                'amount' => $service->amount,
+                'discounted_amount' => $service->discounted_amount,
+                'discounted_amount' => $service->discounted_amount,
+                'product_description' => $service->product_description,
+                'product_image' => $service->product_image,
+                'product_fetured' => $service->product_fetured,
+                'cat_id' => $service->cat_id,
+                'short_description' => $service->short_description,
+                'popular_service' => $service->popular_service
+            ];
+        });
     return view('product.services', compact(
         'services',
         'category',
         'search',
-        'categoryMap'
+        'categoryMap',
+        'serviceData'
     ));
 }
 

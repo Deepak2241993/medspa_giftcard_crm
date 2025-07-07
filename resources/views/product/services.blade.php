@@ -98,6 +98,29 @@
         border-color: #eee;
         background-color: #f9f9f9;
     }
+
+   .search-dropdown {
+    position: absolute;
+    background: #fff;
+    border: 1px solid #ccc;
+    width: 100%;
+    z-index: 1000;
+    display: none;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.suggestion-item {
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.suggestion-item:hover {
+    background-color: #f0f0f0;
+}
+
+
+
 </style>
 @endpush
     
@@ -191,11 +214,12 @@
                     </button>
                     <div class="search-dropdown" id="searchDropdown"></div>
                 </div>
+
             </div>
 
             <div class="service-options">
                 <!-- Service Option 1 -->
-                 @if (isset($services))
+                 @if (isset($services) && $services->count() > 0)
                 @foreach ($services as $value)
                 
                 <div class="service-card">
@@ -217,9 +241,7 @@
                         </p>
 
                         <div class="hidden-content">
-                            <p>muscle contractions that cause dynamic wrinkles. It's FDA-approved and has been safely
-                                used for cosmetic purposes for over 20 years. Our experienced practitioners ensure
-                                natural-looking results that enhance your beauty.</p>
+                            <p>{!! $value['product_description'] !!}</p>
                         </div>
                     </div>
 
@@ -256,10 +278,8 @@
                     {{ $services->links() }}
                 </div>
                     @else
-                        <p>{{ $services['error'] }}</p>
+                        <p>{{ 'No Data Found' }}</p>
                     @endif
-
-                
             </div>
         </div>
     </div>
@@ -352,6 +372,7 @@ function updateCartItemQuantity(key, newQuantity) {
     </script> 
 <script>
     const categoryMap = @json($categoryMap);
+    // For Category Search
     function selectCategory(category, selectedItem) {
   document.querySelectorAll(".category-item").forEach((item) => {
     item.classList.remove("active");
@@ -359,7 +380,7 @@ function updateCartItemQuantity(key, newQuantity) {
 
   selectedItem.classList.add("active");
 
-  const searchInput = document.getElementById("serviceSearch");
+  const searchInput = document.getElementById("categorySearch");
   const categoryName = categoryMap[category] || "";
   searchInput.value = categoryName;
 
@@ -371,6 +392,179 @@ function updateCartItemQuantity(key, newQuantity) {
   createRipple(selectedItem);
 }
 </script>
+
+{{-- For Service Search --}}
+<script>
+    const allServices = @json($serviceData); // full list
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const searchInput = document.getElementById('serviceSearch');
+        const searchDropdown = document.getElementById('searchDropdown');
+        const clearBtn = document.getElementById('clearSearch');
+        const serviceContainer = document.querySelector('.service-options');
+
+        searchInput.addEventListener('input', function () {
+            const query = this.value.trim().toLowerCase();
+            searchDropdown.innerHTML = '';
+
+            if (query.length > 0) {
+                clearBtn.style.display = 'block';
+                searchDropdown.style.display = 'block';
+
+                const filtered = allServices.filter(item =>
+                    item.product_name.toLowerCase().includes(query)
+                );
+
+                if (filtered.length) {
+                    filtered.forEach(item => {
+                        const div = document.createElement('div');
+                        div.textContent = item.product_name;
+                        div.classList.add('suggestion-item');
+                        div.onclick = () => {
+                            searchInput.value = item.product_name;
+                            searchDropdown.style.display = 'none';
+                            clearBtn.style.display = 'block';
+                            renderServiceCard(item);
+                        };
+                        searchDropdown.appendChild(div);
+                    });
+                } else {
+                    searchDropdown.innerHTML = '<div class="suggestion-item">No matches</div>';
+                }
+            } else {
+                clearBtn.style.display = 'none';
+                searchDropdown.style.display = 'none';
+                showAllServices(); // show all on clear
+            }
+        });
+
+        clearBtn.addEventListener('click', function () {
+            searchInput.value = '';
+            searchDropdown.style.display = 'none';
+            this.style.display = 'none';
+            showAllServices();
+        });
+
+        document.addEventListener('click', function (e) {
+            if (!e.target.closest('.search-container')) {
+                searchDropdown.style.display = 'none';
+            }
+        });
+
+        showAllServices(); // initial load
+    });
+
+    function renderServiceCard(service) {
+        const container = document.querySelector('.service-options');
+        container.innerHTML = '';
+
+        let popularBadge = service.popular_service == 1
+            ? `<div class="service-badge">Popular</div>` : '';
+
+        const cardHTML = `
+            <div class="service-card">
+                <div class="service-card-header">
+                    <h3>${service.product_name}</h3>
+                    <div class="service-price">From $${service.amount}</div>
+                    ${popularBadge}
+                </div>
+
+                <div class="service-description">
+                    <p>${service.short_description || ''}</p>
+                    <button class="read-more-btn" onclick="toggleReadMore(this)">
+                        <span>Read More</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="hidden-content">
+                        <p>${service.product_description || ''}</p>
+                    </div>
+                </div>
+
+                <div class="service-footer">
+                    <div class="service-info">
+                        <div class="price">
+                            <i class="fas fa-tag"></i>
+                            <span class="price-display">From $${service.discounted_amount}</span>
+                        </div>
+                    </div>
+                    <div class="quantity-controls" style="display: none;">
+                        <button class="quantity-btn minus-btn" onclick="updateQuantity(this, -1)">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <span class="quantity-display">1</span>
+                        <button class="quantity-btn plus-btn" onclick="updateQuantity(this, 1)">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    <button class="book-now-btn" onclick="toggleQuantityControls(this)"
+                        data-base-price="${service.discounted_amount}" data-id="${service.id}">
+                        <span>Book Now</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+
+        container.innerHTML = cardHTML;
+    }
+
+    function showAllServices() {
+        const container = document.querySelector('.service-options');
+        container.innerHTML = '';
+
+        allServices.forEach(service => {
+            let popularBadge = service.popular_service == 1
+                ? `<div class="service-badge">Popular</div>` : '';
+
+            const cardHTML = `
+                <div class="service-card">
+                    <div class="service-card-header">
+                        <h3>${service.product_name}</h3>
+                        <div class="service-price">From $${service.amount}</div>
+                        ${popularBadge}
+                    </div>
+
+                    <div class="service-description">
+                        <p>${service.short_description || ''}</p>
+                        <button class="read-more-btn" onclick="toggleReadMore(this)">
+                            <span>Read More</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="hidden-content">
+                            <p>${service.product_description || ''}</p>
+                        </div>
+                    </div>
+
+                    <div class="service-footer">
+                        <div class="service-info">
+                            <div class="price">
+                                <i class="fas fa-tag"></i>
+                                <span class="price-display">From $${service.discounted_amount}</span>
+                            </div>
+                        </div>
+                        <div class="quantity-controls" style="display: none;">
+                            <button class="quantity-btn minus-btn" onclick="updateQuantity(this, -1)">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <span class="quantity-display">1</span>
+                            <button class="quantity-btn plus-btn" onclick="updateQuantity(this, 1)">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                        <button class="book-now-btn" onclick="toggleQuantityControls(this)"
+                            data-base-price="${service.discounted_amount}" data-id="${service.id}">
+                            <span>Book Now</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            container.innerHTML += cardHTML;
+        });
+    }
+</script>
+
 
 
 

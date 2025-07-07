@@ -1654,7 +1654,7 @@ body {
 }
 
 .hidden-content.expanded {
-  max-height: 300px;
+  max-height: 100%;
   margin-top: var(--space-lg);
   opacity: 1;
 }

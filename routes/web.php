@@ -7,7 +7,7 @@ use App\Http\Controllers\ProductImportController;
 use App\Http\Controllers\ImageUploadController;
 use App\Http\Controllers\CategoryExportController;
 use App\Http\Controllers\PDFController;
-use App\Models\Patient;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes

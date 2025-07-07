@@ -98,82 +98,6 @@ const style = document.createElement("style")
 style.textContent = rippleCSS
 document.head.appendChild(style)
 
-const serviceData = [
-  {
-    id: "botox-new",
-    title: "Botox/Xeomin/Dysport/Letybo",
-    category: "Botox Treatments",
-    keywords: ["botox", "xeomin", "dysport", "letybo", "wrinkles", "lines", "neuromodulator"],
-    icon: "fas fa-syringe",
-    price: "From $299",
-    duration: "15 minutes",
-  },
-  {
-    id: "botox-repeat",
-    title: "Botox/Xeomin/Dysport/Letybo - Repeat Client",
-    category: "Botox Treatments",
-    keywords: ["botox", "xeomin", "dysport", "letybo", "repeat", "returning", "discount"],
-    icon: "fas fa-user-check",
-    price: "From $269",
-    duration: "15 minutes",
-  },
-  {
-    id: "fillers-basic",
-    title: "Dermal Fillers - Juvederm/Restylane",
-    category: "Dermal Fillers",
-    keywords: ["fillers", "juvederm", "restylane", "lips", "cheeks", "volume"],
-    icon: "fas fa-fill-drip",
-    price: "From $599",
-    duration: "30 minutes",
-  },
-  {
-    id: "fillers-premium",
-    title: "Premium Filler Treatment",
-    category: "Dermal Fillers",
-    keywords: ["premium", "fillers", "advanced", "luxury", "enhancement"],
-    icon: "fas fa-star",
-    price: "From $799",
-    duration: "45 minutes",
-  },
-  {
-    id: "laser-hair",
-    title: "Laser Hair Removal - Full Body",
-    category: "Laser Treatments",
-    keywords: ["laser", "hair", "removal", "permanent", "smooth", "body"],
-    icon: "fas fa-laser",
-    price: "From $150",
-    duration: "60 minutes",
-  },
-  {
-    id: "laser-skin",
-    title: "Laser Skin Resurfacing",
-    category: "Laser Treatments",
-    keywords: ["laser", "skin", "resurfacing", "texture", "scars", "rejuvenation"],
-    icon: "fas fa-spa",
-    price: "From $450",
-    duration: "45 minutes",
-  },
-  {
-    id: "hydrafacial",
-    title: "HydraFacial Treatment",
-    category: "Facial Treatments",
-    keywords: ["hydrafacial", "facial", "cleansing", "hydrating", "glow"],
-    icon: "fas fa-leaf",
-    price: "From $199",
-    duration: "60 minutes",
-  },
-  {
-    id: "microderm",
-    title: "Diamond Microdermabrasion",
-    category: "Facial Treatments",
-    keywords: ["microdermabrasion", "diamond", "exfoliation", "skin", "texture"],
-    icon: "fas fa-gem",
-    price: "From $149",
-    duration: "45 minutes",
-  },
-]
-
-
 let currentSearchResults = []
 let selectedResultIndex = -1
 
@@ -183,10 +107,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const clearButton = document.getElementById("clearSearch")
   const searchDropdown = document.getElementById("searchDropdown")
 
-  
-  searchInput.addEventListener("input", handleSearch)
   searchInput.addEventListener("keydown", handleKeyNavigation)
-  searchInput.addEventListener("focus", handleSearchFocus)
+
 
 
   clearButton.addEventListener("click", clearSearch)
@@ -199,56 +121,6 @@ document.addEventListener("DOMContentLoaded", () => {
   })
 })
 
-function handleSearch(e) {
-  const query = e.target.value.trim()
-  const clearButton = document.getElementById("clearSearch")
-
-  
-  if (query.length > 0) {
-    clearButton.style.display = "block"
-  } else {
-    clearButton.style.display = "none"
-    hideSearchDropdown()
-    resetServiceCards()
-    return
-  }
-
-  
-  if (query.length >= 2) {
-    performSearch(query)
-  } else {
-    hideSearchDropdown()
-    resetServiceCards()
-  }
-}
-
-function performSearch(query) {
-  const searchDropdown = document.getElementById("searchDropdown")
-  const results = searchServices(query)
-  currentSearchResults = results
-  selectedResultIndex = -1
-
-  if (results.length > 0) {
-    displaySearchResults(results)
-    showSearchDropdown()
-    filterServiceCards(results)
-  } else {
-    displayNoResults()
-    showSearchDropdown()
-    hideAllServiceCards()
-  }
-}
-
-function searchServices(query) {
-  const searchTerm = query.toLowerCase()
-  return serviceData.filter((service) => {
-    return (
-      service.title.toLowerCase().includes(searchTerm) ||
-      service.category.toLowerCase().includes(searchTerm) ||
-      service.keywords.some((keyword) => keyword.includes(searchTerm))
-    )
-  })
-}
 
 function displaySearchResults(results) {
   const searchDropdown = document.getElementById("searchDropdown")
@@ -434,19 +306,7 @@ function updateServiceCards(selectedService) {
   })
 }
 
-function updateRelatedServices(category) {
-  const serviceIcons = document.querySelectorAll(".service-icon i")
-  const serviceTitles = document.querySelectorAll(".service-card h3")
 
-
-  const relatedServices = serviceData.filter((s) => s.category === category)
-
-  if (relatedServices.length > 1 && serviceIcons[1] && serviceTitles[1]) {
-    const secondService = relatedServices[1] || relatedServices[0]
-    serviceIcons[1].className = secondService.icon
-    serviceTitles[1].textContent = secondService.title
-  }
-}
 
 document.addEventListener("DOMContentLoaded", () => {
   const categoryItems = document.querySelectorAll(".category-item")
@@ -512,6 +372,7 @@ function filterCategories(query) {
   })
 }
 
+// for clear search data
 function resetCategoryFilter() {
   allCategories.forEach((categoryData) => {
     categoryData.element.classList.remove("filtered")
@@ -545,12 +406,10 @@ document.addEventListener("click", (e) => {
 
     const originalText = button.innerHTML
     button.style.background = "var(--success-color)"
-    // button.innerHTML = '<i class="fas fa-check"></i> <span>Booking...</span>'
 
     button.style.animation = "pulse 1s ease-in-out"
 
     setTimeout(() => {
-      // button.innerHTML = '<i class="fas fa-calendar-check"></i> <span>Request Sent!</span>'
       setTimeout(() => {
         button.innerHTML = originalText
         button.style.background = ""
@@ -946,7 +805,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("cartCloseBtn").addEventListener("click", closeCartSidebar)
   document.getElementById("cartSidebarOverlay").addEventListener("click", closeCartSidebar)
-  document.getElementById("clearCartBtn").addEventListener("click", clearCart)
+  // document.getElementById("clearCartBtn").addEventListener("click", clearCart)
   document.getElementById("checkoutBtn").addEventListener("click", proceedToCheckout)
 
   

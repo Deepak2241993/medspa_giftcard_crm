@@ -291,7 +291,7 @@ public function update(Request $request,$id)
         //         ->orWhere('unit_id', 'like', '%|' . $categoryId)
         //         ->orWhere('unit_id', $categoryId);
         // })
-        ->paginate(15); // Paginate with 15 per page
+        ->paginate(10); // Paginate with 15 per page
 
 
         $category = ProductCategory::where('cat_is_deleted', 0)
@@ -324,12 +324,33 @@ public function update(Request $request,$id)
                 $categoryMap[$cat->slug] = $cat->cat_name;
             }
         }
+      // Fetch all services for the frontend JS
+    $serviceData = Product::where('product_is_deleted', 0)
+        ->where('status', 1)
+        ->where('user_token', 'FOREVER-MEDSPA')
+        ->get()
+        ->map(function ($service) {
+            return [
+                'id' => $service->slug ?? $service->id, // fallback if slug missing
+                'product_name' => $service->product_name,
+                'amount' => $service->amount,
+                'discounted_amount' => $service->discounted_amount,
+                'discounted_amount' => $service->discounted_amount,
+                'product_description' => $service->product_description,
+                'product_image' => $service->product_image,
+                'product_fetured' => $service->product_fetured,
+                'cat_id' => $service->cat_id,
+                'short_description' => $service->short_description,
+                'popular_service' => $service->popular_service
+            ];
+        });
 
         return view('product.services', compact(
             'services',
             'category',
             'search',
-            'categoryMap'
+            'categoryMap',
+            'serviceData'
         ));
      }
 
